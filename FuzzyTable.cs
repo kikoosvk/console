@@ -36,7 +36,7 @@ namespace console
             this.attributes.Add(item.name.ToString(), attr);
             foreach (var label in item.labels)
             {
-                this.table.Columns.Add(label.ToString().Trim(), label.ToString().GetType());
+                this.table.Columns.Add(label.ToString().Trim(), typeof(double));
             }
         }
 
@@ -44,18 +44,18 @@ namespace console
         {
             var rowSize = data.rowsize.ToObject<int>();
             var count = 0;
-            var row = new double[rowSize];
+            var row = this.table.NewRow();
 
             foreach (var value in data.values)
             {
-                
+
                 row[count] = value;
                 count++;
                 if(count >= rowSize)
                 {
                     this.table.Rows.Add(row);
                     count = 0;
-                    row = new double[rowSize];
+                    row = this.table.NewRow();
                 }
             }
         }
