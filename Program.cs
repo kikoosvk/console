@@ -31,6 +31,8 @@ namespace console
 
                     table.AddData(array.data);
 
+                    Console.WriteLine(table.GetTable().Rows[1][17]);
+
                     return;
 
                 // Read the stream to a string, and write the string to the console.
