@@ -38,8 +38,12 @@ namespace console
             {
                 this.table.Columns.Add(label.ToString().Trim(), typeof(double));
             }
+
         }
 
+        public FuzzyAttribute getAttribute(string name){
+            return this.attributes[name];
+        }
         public void AddData(dynamic data)
         {
             var rowSize = data.rowsize.ToObject<int>();

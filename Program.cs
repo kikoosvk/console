@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using Accord.Fuzzy;
+using console.src.algorithm01;
 using Newtonsoft.Json;
 
 namespace console
@@ -31,8 +32,9 @@ namespace console
 
                     table.AddData(array.data);
 
-                    Console.WriteLine(table.GetTable().Rows[1][17]);
-
+                    var alg = new Algorithm();
+                    var val = alg.calculateN(table,0.2, "A1", "C", null);
+                    Console.WriteLine(val);
                     return;
 
                 // Read the stream to a string, and write the string to the console.
