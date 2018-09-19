@@ -20,19 +20,42 @@ namespace console.src.algorithm01
         public double calculateSubN(FuzzyTable table, double alfa, string subB, string C, string P)
         {
             double value = 0;
-            var sortedPIList = calculatePIList();
-            for (int i = 2; i < calculateAttributeCardinality(table, C); i++)
+            var sortedPIList = calculatePIList(table, alfa, subB, C, P);
+            for (int i = 2; i <= calculateAttributeCardinality(table, C); i++)
             {
                 // PI[i] - PI[i+1] * ln i
-                value += (sortedPIList[i - 2] - sortedPIList[i - 1]) * Math.Log(i);
+                value += (sortedPIList[i - 1] - sortedPIList[i]) * Math.Log(i);
             }
 
             return value;
         }
 
-        public double[] calculatePIList()
+        public double[] calculatePIList(FuzzyTable table, double alfa, string G, string C, string P)
         {
-            
+            var labels = table.getAttribute(C).Labels;
+            var PIList = new double[labels.Length];
+            for (int i = 0; i < labels.Length; i++)
+            {
+                PIList[i] = calculateSvietnik(table,alfa,G,labels[i],P);
+            }
+            Array.Sort(PIList);
+            Array.Reverse(PIList);
+            var max = PIList[0];
+            for (int i = 0; i < PIList.Length; i++)
+            {
+                PIList[i] = PIList[i] / max;
+            }
+            Array.Resize(ref  PIList, PIList.Length+1);
+            PIList[PIList.Length - 1] =  0;
+            // vraciam svietnik / max svietnik
+            for (int i = 0; i < PIList.Length; i++)
+            {
+                if(Double.IsNaN(PIList[i]))
+                {
+                    PIList[i] = 0;
+                }   
+            }
+            return PIList;
         }
 
         public double calculateSvietnik(FuzzyTable table, double alfa, string G, string subC, string P) {
@@ -43,6 +66,7 @@ namespace console.src.algorithm01
                 top += minimumTNorm(alfa, (double)row[G], (double)row[subC]);
                 bottom += minimumTNorm(alfa, (double)row[G], 1);
             }
+            if(Double.IsNaN(top / bottom)) return 0; 
             return top / bottom;
         }
 

@@ -33,8 +33,14 @@ namespace console
                     table.AddData(array.data);
 
                     var alg = new Algorithm();
-                    var val = alg.calculateN(table,0.2, "A1", "C", null);
-                    Console.WriteLine(val);
+                    var N01 = alg.calculateN(table,0.1, "A1", "C", null);
+                    var N02 = alg.calculateN(table,0.1, "A2", "C", null);
+                    var N03 = alg.calculateN(table,0.1, "A3", "C", null);
+                    var N04 = alg.calculateN(table,0.1, "A4", "C", null);
+                    var N05 = alg.calculateN(table,0.1, "A5", "C", null);
+                    Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
+                    // Console.WriteLine("N A2: {0}", N02);
+
                     return;
 
                 // Read the stream to a string, and write the string to the console.
