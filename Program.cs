@@ -9,9 +9,6 @@ namespace console
 {
     class Program
     {
-        private static readonly Regex sWhitespace = new Regex(@"\s+");
-        public static string ReplaceWhitespace(string input, string replacement) { return sWhitespace.Replace(input, replacement); }
-
         static void Main(string[] args)
         {
             var table = new FuzzyTable();

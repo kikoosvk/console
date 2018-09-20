@@ -19,9 +19,10 @@ namespace console.src.algorithm01
 
         public double calculateSubN(FuzzyTable table, double alfa, string subB, string C, string P)
         {
+            if(table.getAttribute(C).Labels.Length == 0) return 0;
             double value = 0;
             var sortedPIList = calculatePIList(table, alfa, subB, C, P);
-            for (int i = 2; i <= calculateAttributeCardinality(table, C); i++)
+            for (int i = 2; i <= table.getAttribute(C).Labels.Length; i++)
             {
                 // PI[i] - PI[i+1] * ln i
                 value += (sortedPIList[i - 1] - sortedPIList[i]) * Math.Log(i);
