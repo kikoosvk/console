@@ -28,13 +28,27 @@ namespace console
                     table.addAttribute(array.classAttribute);
 
                     table.AddData(array.data);
+                    var p = new int[20];
+                    for (int i = 0; i < p.Length; i++)
+                    {
+                        p[i] = i;
+                    }
+                    p = new int[2];
+                    p[0]=2;
+                    p[1]=7;
+                    p = new int[3];
+                    p[0]=6;
+                    p[1]=13;
+                    p[2]=14;
+
+
 
                     var alg = new Algorithm();
-                    var N01 = alg.calculateN(table,0.1, "A1", "C", null);
-                    var N02 = alg.calculateN(table,0.1, "A2", "C", null);
-                    var N03 = alg.calculateN(table,0.1, "A3", "C", null);
-                    var N04 = alg.calculateN(table,0.1, "A4", "C", null);
-                    var N05 = alg.calculateN(table,0.1, "A5", "C", null);
+                    var N01 = alg.calculateN(table,0.1, "A1", "C", p);
+                    var N02 = alg.calculateN(table,0.1, "A2", "C", p);
+                    var N03 = alg.calculateN(table,0.1, "A3", "C", p);
+                    var N04 = alg.calculateN(table,0.1, "A4", "C", p);
+                    var N05 = alg.calculateN(table,0.1, "A5", "C", p);
                     Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
                     // Console.WriteLine("N A2: {0}", N02);
 
