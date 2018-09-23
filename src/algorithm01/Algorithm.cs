@@ -5,24 +5,42 @@ namespace console.src.algorithm01
 {
     public class Algorithm
     {
-        public double calculateN(FuzzyTable table, double alfa, string A, string C, int[] rows)
+        private FuzzyTable table;
+        private double alfa;
+        private double psi; 
+        private int t;
+        public Algorithm(FuzzyTable table, double alfa, double psi)
+        {
+            this.table = table;
+            this.alfa = alfa;
+            this.psi = psi;
+            this.t = 0;
+        }
+
+        public void process(FuzzyTable table) {
+            
+        }
+
+        
+
+        public double calculateN(string A, string C, int[] rows)
         {
             double value = 0;
-            var labels = table.getAttribute(A).Labels;
-            var cardA = calculateAttributeCardinality(table, A, rows);
+            var labels = this.table.getAttribute(A).Labels;
+            var cardA = calculateAttributeCardinality(A, rows);
             foreach (var subA in labels)
             {
-                value += (calculateSubAttributeCardinality(table, subA,rows) / cardA) * calculateSubN(table, alfa, subA, C, rows);
+                value += (calculateSubAttributeCardinality(subA,rows) / cardA) * calculateSubN(subA, C, rows);
             }
             return value;
         }
 
-        public double calculateSubN(FuzzyTable table, double alfa, string subB, string C,int[] rows)
+        public double calculateSubN(string subB, string C,int[] rows)
         {
-            if(table.getAttribute(C).Labels.Length == 0) return 0;
+            if(this.table.getAttribute(C).Labels.Length == 0) return 0;
             double value = 0;
-            var sortedPIList = calculatePIList(table, alfa, subB, C, rows);
-            for (int i = 2; i <= table.getAttribute(C).Labels.Length; i++)
+            var sortedPIList = calculatePIList(subB, C, rows);
+            for (int i = 2; i <= this.table.getAttribute(C).Labels.Length; i++)
             {
                 // PI[i] - PI[i+1] * ln i
                 value += (sortedPIList[i - 1] - sortedPIList[i]) * Math.Log(i);
@@ -30,13 +48,13 @@ namespace console.src.algorithm01
             return value;
         }
 
-        public double[] calculatePIList(FuzzyTable table, double alfa, string G, string C, int[] rows)
+        public double[] calculatePIList(string G, string C, int[] rows)
         {
-            var labels = table.getAttribute(C).Labels;
+            var labels = this.table.getAttribute(C).Labels;
             var PIList = new double[labels.Length];
             for (int i = 0; i < labels.Length; i++)
             {
-                PIList[i] = calculateSvietnik(table,alfa,G,labels[i],rows);
+                PIList[i] = calculateSvietnik(G,labels[i],rows);
             }
             Array.Sort(PIList);
             Array.Reverse(PIList);
@@ -58,46 +76,46 @@ namespace console.src.algorithm01
             return PIList;
         }
 
-        public double calculateSvietnik(FuzzyTable table, double alfa, string G, string subC, int[] rows) {
+        public double calculateSvietnik(string G, string subC, int[] rows) {
             double top = 0;
             double bottom = 0;
             foreach (int index in rows)
             {
-                top += minimumTNorm(alfa, (double)table.GetTable().Rows[index][G],
-                     (double)table.GetTable().Rows[index][subC]);
-                bottom += minimumTNorm(alfa, (double)table.GetTable().Rows[index][G], 1);
+                top += minimumTNorm((double)this.table.GetTable().Rows[index][G],
+                     (double)this.table.GetTable().Rows[index][subC]);
+                bottom += minimumTNorm((double)this.table.GetTable().Rows[index][G], 1);
             }
             if(Double.IsNaN(top / bottom)) return 0; 
             return top / bottom;
         }
 
-        public double minimumTNorm(double alfa, double va1, double va2)
+        public double minimumTNorm( double va1, double va2)
         {
-            var val01 = va1 < alfa ? 0 : va1;
-            var val02 = va2 < alfa ? 0 : va2;
+            var val01 = va1 < this.alfa ? 0 : va1;
+            var val02 = va2 < this.alfa ? 0 : va2;
             return val01 < val02 ? val01 : val02;
         }
 
-        public double calculateAttributeCardinality(FuzzyTable table, string name, int[] rows)
+        public double calculateAttributeCardinality(string name, int[] rows)
         {
             double value = 0;
-            var labels = table.getAttribute(name).Labels;
+            var labels = this.table.getAttribute(name).Labels;
             foreach (int index in rows)
             {
                 foreach(var label in labels)
                 {
-                    value += (double) table.GetTable().Rows[index][label];
+                    value += (double) this.table.GetTable().Rows[index][label];
                 }  
             }
             return value;
         }
 
-        public double calculateSubAttributeCardinality(FuzzyTable table, string name, int[] rows)
+        public double calculateSubAttributeCardinality(string name, int[] rows)
         {
             double value = 0;
             foreach (int index in rows)
             {
-                    value += (double) table.GetTable().Rows[index][name];
+                    value += (double) this.table.GetTable().Rows[index][name];
             }
             return value;
         }
