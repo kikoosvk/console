@@ -25,7 +25,10 @@ namespace console
                     {
                         table.addAttribute(item);
                     }
-                    table.addAttribute(array.classAttribute);
+                    foreach (var item in array.consequents)
+                    { 
+                        table.addConsequent(array.classAttribute);
+                    }
 
                     table.AddData(array.data);
                     var p = new int[20];

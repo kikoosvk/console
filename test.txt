@@ -22,10 +22,12 @@
         }
         
     ],
-    "classAttribute": {
-        "name": "C",
-        "labels": ["c1", "c2"]
-    },
+    "consequents": [
+        {
+            "name": "C",
+            "labels": ["c1", "c2"]
+        }
+    ],
     "data": {
         "rowsize": 18,
         "values": [

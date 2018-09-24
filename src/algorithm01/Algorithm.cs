@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace console.src.algorithm01
@@ -9,19 +10,55 @@ namespace console.src.algorithm01
         private double alfa;
         private double psi; 
         private int t;
+        private List<FuzzyRule> rules;
+        private List<string> labels;
+        private List<string> labelsToRemove;
+        private int maxDlzka;
+        private int aktualnaDlzka;
+        private bool ponechanaPremenna;
+        private FuzzyAttribute C;
+        private int[] rows;
+
         public Algorithm(FuzzyTable table, double alfa, double psi)
         {
             this.table = table;
             this.alfa = alfa;
             this.psi = psi;
             this.t = 0;
+            this.rules = new List<FuzzyRule>();
+            this.labels = this.table.getAllLabels();
+            this.labelsToRemove = this.labels;
+            this.maxDlzka = this.labels.Count;
+            this.aktualnaDlzka = 1;
+            this.ponechanaPremenna = false;
+            this.C = this.table.getConsequent();
+            this.rows = new int[this.table.GetTable().Rows.Count];
+            for (int i = 0; i < this.table.GetTable().Rows.Count; i++)
+            {
+                rows[i] = i;
+            }
         }
 
-        public void process(FuzzyTable table) {
+        public List<FuzzyRule> process(FuzzyTable table) {
             
-        }
+            // K2
+            string odstranovana = null;
+            double maxHodnota = -1;;
+            foreach (var label in this.labelsToRemove)
+            {  
+                var hodnotaN = this.calculateN(label,this.C.Name,rows);
+                if(maxHodnota < hodnotaN){
+                    odstranovana = label;
+                    maxHodnota = hodnotaN;
+                }
+            }         
 
-        
+            this.labels.Remove(odstranovana);
+            
+
+
+            return this.rules;
+        }
 
         public double calculateN(string A, string C, int[] rows)
         {
@@ -37,10 +74,10 @@ namespace console.src.algorithm01
 
         public double calculateSubN(string subB, string C,int[] rows)
         {
-            if(this.table.getAttribute(C).Labels.Length == 0) return 0;
+            if(this.table.getConsequent(C).Labels.Length == 0) return 0;
             double value = 0;
             var sortedPIList = calculatePIList(subB, C, rows);
-            for (int i = 2; i <= this.table.getAttribute(C).Labels.Length; i++)
+            for (int i = 2; i <= this.table.getConsequent(C).Labels.Length; i++)
             {
                 // PI[i] - PI[i+1] * ln i
                 value += (sortedPIList[i - 1] - sortedPIList[i]) * Math.Log(i);
@@ -50,7 +87,7 @@ namespace console.src.algorithm01
 
         public double[] calculatePIList(string G, string C, int[] rows)
         {
-            var labels = this.table.getAttribute(C).Labels;
+            var labels = this.table.getConsequent(C).Labels;
             var PIList = new double[labels.Length];
             for (int i = 0; i < labels.Length; i++)
             {

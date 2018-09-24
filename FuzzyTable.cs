@@ -11,11 +11,13 @@ namespace console
         DataTable table;
 
         Dictionary<string, FuzzyAttribute> attributes;
+        Dictionary<string, FuzzyAttribute> consequents ;
 
         public FuzzyTable()
         {
             this.table = new DataTable();
             this.attributes = new Dictionary<string, FuzzyAttribute>();
+            this.consequents = new Dictionary<string, FuzzyAttribute>();
         }
 
         public DataTable GetTable() 
@@ -41,9 +43,54 @@ namespace console
 
         }
 
-        public FuzzyAttribute getAttribute(string name){
+        public void addConsequent(dynamic item)
+        {
+            // convert jsonmvalues to string
+            var labels = new string[item.labels.Count];
+            for (int i = 0; i < item.labels.Count; i++)
+            {
+                labels[i] = item.labels[i].ToString();   
+            }
+
+            var attr = new FuzzyAttribute(item.name.ToString(), labels);
+            this.consequents.Add(item.name.ToString(), attr);
+            foreach (var label in item.labels)
+            {
+                this.table.Columns.Add(label.ToString().Trim(), typeof(double));
+            }
+
+        }
+
+        public FuzzyAttribute getAttribute(string name)
+        {
             return this.attributes[name];
         }
+        public FuzzyAttribute getConsequent(string name)
+        {
+            return this.consequents[name];
+        }
+
+        public FuzzyAttribute getConsequent()
+        {
+            foreach (var item in this.consequents.Values)
+            {
+                return item;
+            }
+            return null;
+        }
+
+
+        public List<string> getAllLabels() 
+        {
+            var labels = new List<string>();
+            foreach (var atr in this.attributes.Values)
+            {
+                labels.AddRange(atr.Labels);
+            }
+            return labels;
+        }
+        
+
         public void AddData(dynamic data)
         {
             var rowSize = data.rowsize.ToObject<int>();
