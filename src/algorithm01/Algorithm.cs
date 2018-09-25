@@ -11,13 +11,16 @@ namespace console.src.algorithm01
         private double psi; 
         private int t;
         private List<FuzzyRule> rules;
-        private List<string> labels;
-        private List<string> labelsToRemove;
+        private List<string> Q;
+        private List<string> Q1;
+        private List<string> Q2;
+        private List<string> L;
         private int maxDlzka;
         private int aktualnaDlzka;
         private bool ponechanaPremenna;
         private FuzzyAttribute C;
-        private int[] rows;
+        private int[] P;
+        private int[] I;
 
         public Algorithm(FuzzyTable table, double alfa, double psi)
         {
@@ -26,17 +29,18 @@ namespace console.src.algorithm01
             this.psi = psi;
             this.t = 0;
             this.rules = new List<FuzzyRule>();
-            this.labels = this.table.getAllLabels();
-            this.labelsToRemove = this.labels;
-            this.maxDlzka = this.labels.Count;
+            this.Q = this.table.getAllLabels();
+            this.L = this.Q;
+            this.maxDlzka = this.Q.Count;
             this.aktualnaDlzka = 1;
             this.ponechanaPremenna = false;
             this.C = this.table.getConsequent();
-            this.rows = new int[this.table.GetTable().Rows.Count];
+            this.P = new int[this.table.GetTable().Rows.Count];
             for (int i = 0; i < this.table.GetTable().Rows.Count; i++)
             {
-                rows[i] = i;
+                P[i] = i;
             }
+            this.I = this.P;
         }
 
         public List<FuzzyRule> process(FuzzyTable table) {
@@ -44,18 +48,24 @@ namespace console.src.algorithm01
             // K2
             string odstranovana = null;
             double maxHodnota = -1;;
-            foreach (var label in this.labelsToRemove)
+            foreach (var labelAk in this.L)
             {  
-                var hodnotaN = this.calculateN(label,this.C.Name,rows);
+                var hodnotaN = this.calculateN(labelAk,this.C.Name,I);
                 if(maxHodnota < hodnotaN){
-                    odstranovana = label;
+                    odstranovana = labelAk;
                     maxHodnota = hodnotaN;
                 }
-            }         
+            }      
+            int[] I1 = new int[this.P.Length];
+            int[] I2 = new int[this.P.Length];
 
-            this.labels.Remove(odstranovana);
+
             
-
+            if(ponechanaPremenna) {
+                zt = i
+            } else {
+                zt = p
+            }
 
             return this.rules;
         }
