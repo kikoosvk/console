@@ -89,6 +89,17 @@ namespace console
             }
             return labels;
         }
+
+        public List<string> getAllAttributes() 
+        {
+            var labels = new List<string>();
+            foreach (var atr in this.attributes.Values)
+            {
+                labels.Add(atr.Name);
+            }
+            return labels;
+        }
+
         
 
         public void AddData(dynamic data)

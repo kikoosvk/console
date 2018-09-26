@@ -21,6 +21,7 @@ namespace console.src.algorithm01
         private FuzzyAttribute C;
         private int[] P;
         private int[] I;
+        private int[] Z;
 
         public Algorithm(FuzzyTable table, double alfa, double psi)
         {
@@ -29,7 +30,9 @@ namespace console.src.algorithm01
             this.psi = psi;
             this.t = 0;
             this.rules = new List<FuzzyRule>();
-            this.Q = this.table.getAllLabels();
+            this.Q = this.table.getAllAttributes();
+            this.Q1 = new List<string>();
+            this.Q2 = new List<string>();
             this.L = this.Q;
             this.maxDlzka = this.Q.Count;
             this.aktualnaDlzka = 1;
@@ -41,6 +44,7 @@ namespace console.src.algorithm01
                 P[i] = i;
             }
             this.I = this.P;
+            this.Z = P;
         }
 
         public List<FuzzyRule> process(FuzzyTable table) {
@@ -58,18 +62,98 @@ namespace console.src.algorithm01
             }      
             int[] I1 = new int[this.P.Length];
             int[] I2 = new int[this.P.Length];
-
-
             
+            this.Q1 = new List<string>(this.Q);
+            this.Q1.Remove(odstranovana);
+            this.Q2 = new List<string>(this.Q);
+
+            this.L.Remove(odstranovana);
             if(ponechanaPremenna) {
-                zt = i
-            } else {
-                zt = p
+                this.Z = I;
+            } else{
+                this.Z = P;
+            }
+
+            foreach (var pacient in this.I)
+            {
+                if (existujeQcko(pacient)) {
+
+                } else {
+
+                }
             }
 
             return this.rules;
         }
 
+        public bool existujeQcko(int patient) 
+        {
+            var patientRow = this.table.GetTable().Rows[patient];
+            foreach (var q in this.Z)
+            {
+                if(q != patient)
+                {
+                    foreach (var labelAk in this.Q1)
+                    {
+                        if(!check(patientRow, this.table.GetTable().Rows[q]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public bool check(DataRow p, DataRow q)
+        {
+            foreach (var labelAk in this.Q1)
+            {
+                var labelValuesP = GetLabelValues(p, this.table.getAttribute(labelAk).Labels);
+                var labelValuesQ = GetLabelValues(q, this.table.getAttribute(labelAk).Labels);
+
+                foreach (var item in labelValuesQ)
+                {
+                    labelValuesP.Remove(item);
+                }
+
+                if(labelValuesP.Count > 0){
+                    return false;
+                }
+            }
+
+            var labelValuesCP = GetLabelValues(p, this.C.Labels);
+            var labelValuesCQ = GetLabelValues(q, this.C.Labels);
+            foreach (var item in labelValuesCQ)
+            {
+                labelValuesCP.Remove(item);
+            }
+            if(labelValuesCP.Count > 0){
+                return false;
+            }
+
+
+            return true;
+        }
+
+        private List<LabelValue> GetLabelValues(DataRow patientRow, string[] labels)
+        {
+            var labelValues = new List<LabelValue>();
+            var labelValuesPom = new List<LabelValue>();
+            foreach (var label in labels)
+            {
+                labelValuesPom.Add(new LabelValue(label, (double)patientRow[label]));
+            }
+            labelValuesPom.Sort();
+            labelValuesPom.Reverse();
+            var maxValue = labelValuesPom[labelValuesPom.Count - 1].Value;
+            foreach (var labelVal in labelValuesPom)
+            {
+                if(labelVal.Value >= maxValue)
+                    labelValues.Add(labelVal);
+            }
+            return labelValues;
+        }
         public double calculateN(string A, string C, int[] rows)
         {
             double value = 0;
