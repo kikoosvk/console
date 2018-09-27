@@ -95,14 +95,14 @@ namespace console.src.algorithm01
                 {
                     foreach (var labelAk in this.Q1)
                     {
-                        if(!check(patientRow, this.table.GetTable().Rows[q]))
+                        if(check(patientRow, this.table.GetTable().Rows[q]))
                         {
-                            return false;
+                            return true;
                         }
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         public bool check(DataRow p, DataRow q)
@@ -117,7 +117,7 @@ namespace console.src.algorithm01
                     labelValuesP.Remove(item);
                 }
 
-                if(labelValuesP.Count > 0){
+                if(labelValuesP.Count == 0){
                     return false;
                 }
             }
@@ -128,7 +128,7 @@ namespace console.src.algorithm01
             {
                 labelValuesCP.Remove(item);
             }
-            if(labelValuesCP.Count > 0){
+            if(labelValuesCP.Count == 0){
                 return false;
             }
 
