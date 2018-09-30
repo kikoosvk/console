@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace console.src
 {
-    public class LabelValue : IComparer<LabelValue>, IEquatable<LabelValue>
+    public class LabelValue : IComparable<LabelValue>, IEquatable<LabelValue>
     {
         private string _label;
         private double _value;
@@ -25,11 +25,21 @@ namespace console.src
             set {this._value = value;}
         }
 
-        public int Compare(LabelValue x, LabelValue y)
+            // public int Compare(LabelValue x, LabelValue y)
+            // {
+            //     if(x.Value > y.Value) {
+            //         return 1;
+            //     } else if (x.Value < y.Value) {
+            //         return -1;
+            //     }
+            //     return 0;
+            // }
+
+        public int CompareTo(LabelValue y)
         {
-            if(x.Value > y.Value) {
+             if(this.Value > y.Value) {
                 return 1;
-            } else if (x.Value < y.Value) {
+            } else if (this.Value < y.Value) {
                 return -1;
             }
             return 0;

@@ -27,7 +27,7 @@ namespace console
                     }
                     foreach (var item in array.consequents)
                     { 
-                        table.addConsequent(array.classAttribute);
+                        table.addConsequent(item);
                     }
 
                     table.AddData(array.data);
@@ -36,17 +36,9 @@ namespace console
                     {
                         p[i] = i;
                     }
-                    p = new int[2];
-                    p[0]=2;
-                    p[1]=7;
-                    p = new int[3];
-                    p[0]=6;
-                    p[1]=13;
-                    p[2]=14;
-
-
 
                     var alg = new Algorithm(table,0.1,0.8);
+                    alg.process();
                     var N01 = alg.calculateN( "A1", "C", p);
                     var N02 = alg.calculateN( "A2", "C", p);
                     var N03 = alg.calculateN( "A3", "C", p);

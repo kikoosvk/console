@@ -47,7 +47,7 @@ namespace console.src.algorithm01
             this.Z = P;
         }
 
-        public List<FuzzyRule> process(FuzzyTable table) {
+        public List<FuzzyRule> process() {
             
             // K2
             string odstranovana = null;
@@ -60,8 +60,8 @@ namespace console.src.algorithm01
                     maxHodnota = hodnotaN;
                 }
             }      
-            int[] I1 = new int[this.P.Length];
-            int[] I2 = new int[this.P.Length];
+            List<int> I1 = new List<int>();
+            List<int> I2 = new List<int>();
             
             this.Q1 = new List<string>(this.Q);
             this.Q1.Remove(odstranovana);
@@ -77,9 +77,9 @@ namespace console.src.algorithm01
             foreach (var pacient in this.I)
             {
                 if (existujeQcko(pacient)) {
-
+                    I2.Add(pacient);
                 } else {
-
+                    I1.Add(pacient);
                 }
             }
 
@@ -90,15 +90,13 @@ namespace console.src.algorithm01
         {
             var patientRow = this.table.GetTable().Rows[patient];
             foreach (var q in this.Z)
-            {
+            { 
                 if(q != patient)
                 {
-                    foreach (var labelAk in this.Q1)
+
+                    if(check(patientRow, this.table.GetTable().Rows[q]))
                     {
-                        if(check(patientRow, this.table.GetTable().Rows[q]))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -117,7 +115,7 @@ namespace console.src.algorithm01
                     labelValuesP.Remove(item);
                 }
 
-                if(labelValuesP.Count == 0){
+                if(labelValuesP.Count > 0){
                     return false;
                 }
             }
@@ -128,7 +126,7 @@ namespace console.src.algorithm01
             {
                 labelValuesCP.Remove(item);
             }
-            if(labelValuesCP.Count == 0){
+            if(labelValuesCP.Count > 0){
                 return false;
             }
 
@@ -150,7 +148,10 @@ namespace console.src.algorithm01
             foreach (var labelVal in labelValuesPom)
             {
                 if(labelVal.Value >= maxValue)
+                {
                     labelValues.Add(labelVal);
+                    maxValue = labelVal.Value;
+                }
             }
             return labelValues;
         }
