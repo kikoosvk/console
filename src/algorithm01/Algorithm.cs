@@ -11,17 +11,20 @@ namespace console.src.algorithm01
         private double psi; 
         private int t;
         private List<FuzzyRule> rules;
-        private List<string> Q;
-        private List<string> Q1;
-        private List<string> Q2;
-        private List<string> L;
-        private int maxDlzka;
-        private int aktualnaDlzka;
-        private bool ponechanaPremenna;
+        private List<List<string>> Q;
+        private List<List<string>> Q1;
+        private List<List<string>> Q2;
+        private List<List<string>> L;
+        private List<List<string>> Lzredukovana;
+        private List<int> maxDlzka;
+        private List<int> aktualnaDlzka;
+        private List<bool> ponechanaPremenna;
         private FuzzyAttribute C;
-        private int[] P;
-        private int[] I;
-        private int[] Z;
+        private List<int> P;
+        private List<List<int>> I;
+        private List<List<int>> I1;
+        private List<List<int>> I2;
+        private List<List<int>> Z;
 
         public Algorithm(FuzzyTable table, double alfa, double psi)
         {
@@ -30,66 +33,104 @@ namespace console.src.algorithm01
             this.psi = psi;
             this.t = 0;
             this.rules = new List<FuzzyRule>();
-            this.Q = this.table.getAllAttributes();
-            this.Q1 = new List<string>();
-            this.Q2 = new List<string>();
+            this.Q = new List<List<string>>();
+            this.Q.Add(this.table.getAllAttributes());
+            this.Q1 = new List<List<string>>();
+            this.Q2 = new List<List<string>>();
             this.L = this.Q;
-            this.maxDlzka = this.Q.Count;
-            this.aktualnaDlzka = 1;
-            this.ponechanaPremenna = false;
+            this.maxDlzka = new List<int>();
+            this.maxDlzka.Add(this.Q[this.t].Count);
+            this.aktualnaDlzka.Add(1);
+            this.ponechanaPremenna = new List<bool>();
+            this.ponechanaPremenna.Add(false);
             this.C = this.table.getConsequent();
-            this.P = new int[this.table.GetTable().Rows.Count];
+            this.P = new List<int>(this.table.GetTable().Rows.Count);
             for (int i = 0; i < this.table.GetTable().Rows.Count; i++)
             {
-                P[i] = i;
+                this.P[i] = i;
             }
-            this.I = this.P;
-            this.Z = P;
+            this.I = new List<List<int>>();
+            this.I.Add(P);
+            this.Z = new List<List<int>>();
+            this.Z.Add(P);
+            this.I1 = new List<List<int>>();
+            this.I2 = new List<List<int>>();
+            this.Lzredukovana = new List<List<string>>();
         }
 
         public List<FuzzyRule> process() {
             
             // K2
+            processK2();
+            // K3
+            processK3();
+            // K4
+            processK4();
+            // K5
+            processK5();
+
+            return this.rules;
+        }
+
+        private void processK2()
+        {
             string odstranovana = null;
-            double maxHodnota = -1;;
-            foreach (var labelAk in this.L)
+            double maxHodnota = -1;
+            foreach (var labelAk in this.L[this.t])
             {  
-                var hodnotaN = this.calculateN(labelAk,this.C.Name,I);
+                var hodnotaN = this.calculateN(labelAk,C.Name,this.I[this.t]);
                 if(maxHodnota < hodnotaN){
                     odstranovana = labelAk;
                     maxHodnota = hodnotaN;
                 }
-            }      
-            List<int> I1 = new List<int>();
-            List<int> I2 = new List<int>();
+            }     
+
+            this.I1[this.t] = new List<int>();
+            this.I2[this.t] = new List<int>();
             
-            this.Q1 = new List<string>(this.Q);
-            this.Q1.Remove(odstranovana);
-            this.Q2 = new List<string>(this.Q);
+            this.Q1[this.t] = new List<string>(this.Q[this.t]);
+            this.Q1[this.t].Remove(odstranovana);
+            this.Q2[this.t] = new List<string>(this.Q[this.t]);
 
-            this.L.Remove(odstranovana);
-            if(ponechanaPremenna) {
-                this.Z = I;
+            var Lzreduk = new List<string>(this.L[this.t]);
+            Lzreduk.Remove(odstranovana);
+            this.Lzredukovana.Add(Lzreduk);
+
+            if(ponechanaPremenna[this.t]) {
+                this.Z[this.t] = this.I[this.t];
             } else{
-                this.Z = P;
+                this.Z[this.t] = this.P;
             }
-
-            foreach (var pacient in this.I)
+        }
+        private void processK3()
+        {
+            foreach (var pacient in this.I[t])
             {
                 if (existujeQcko(pacient)) {
-                    I2.Add(pacient);
+                    this.I2[this.t].Add(pacient);
                 } else {
-                    I1.Add(pacient);
+                    this.I1[this.t].Add(pacient);
                 }
             }
+        }
 
-            return this.rules;
+        private void processK4()
+        {
+            if(aktualnaDlzka[t] >= maxDlzka[t])
+            {
+                // TODO sformuj pravidla AK POTOM WOOSH
+            }
+        }
+
+        private void processK5()
+        {
+            
         }
 
         public bool existujeQcko(int patient) 
         {
             var patientRow = this.table.GetTable().Rows[patient];
-            foreach (var q in this.Z)
+            foreach (var q in this.Z[t])
             { 
                 if(q != patient)
                 {
@@ -105,7 +146,7 @@ namespace console.src.algorithm01
 
         public bool check(DataRow p, DataRow q)
         {
-            foreach (var labelAk in this.Q1)
+            foreach (var labelAk in this.Q1[this.t])
             {
                 var labelValuesP = GetLabelValues(p, this.table.getAttribute(labelAk).Labels);
                 var labelValuesQ = GetLabelValues(q, this.table.getAttribute(labelAk).Labels);
@@ -155,7 +196,7 @@ namespace console.src.algorithm01
             }
             return labelValues;
         }
-        public double calculateN(string A, string C, int[] rows)
+        public double calculateN(string A, string C, List<int> rows)
         {
             double value = 0;
             var labels = this.table.getAttribute(A).Labels;
@@ -167,7 +208,7 @@ namespace console.src.algorithm01
             return value;
         }
 
-        public double calculateSubN(string subB, string C,int[] rows)
+        public double calculateSubN(string subB, string C,List<int> rows)
         {
             if(this.table.getConsequent(C).Labels.Length == 0) return 0;
             double value = 0;
@@ -180,7 +221,7 @@ namespace console.src.algorithm01
             return value;
         }
 
-        public double[] calculatePIList(string G, string C, int[] rows)
+        public double[] calculatePIList(string G, string C, List<int> rows)
         {
             var labels = this.table.getConsequent(C).Labels;
             var PIList = new double[labels.Length];
@@ -208,7 +249,7 @@ namespace console.src.algorithm01
             return PIList;
         }
 
-        public double calculateSvietnik(string G, string subC, int[] rows) {
+        public double calculateSvietnik(string G, string subC, List<int> rows) {
             double top = 0;
             double bottom = 0;
             foreach (int index in rows)
@@ -228,7 +269,7 @@ namespace console.src.algorithm01
             return val01 < val02 ? val01 : val02;
         }
 
-        public double calculateAttributeCardinality(string name, int[] rows)
+        public double calculateAttributeCardinality(string name, List<int> rows)
         {
             double value = 0;
             var labels = this.table.getAttribute(name).Labels;
@@ -242,7 +283,7 @@ namespace console.src.algorithm01
             return value;
         }
 
-        public double calculateSubAttributeCardinality(string name, int[] rows)
+        public double calculateSubAttributeCardinality(string name, List<int> rows)
         {
             double value = 0;
             foreach (int index in rows)
