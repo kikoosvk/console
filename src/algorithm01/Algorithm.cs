@@ -16,7 +16,7 @@ namespace console.src.algorithm01
         private List<List<string>> Q2;
         private List<List<string>> L;
         private List<List<string>> Lzredukovana;
-        private List<int> maxDlzka;
+        private int maxDlzka;
         private List<int> aktualnaDlzka;
         private List<bool> ponechanaPremenna;
         private FuzzyAttribute C;
@@ -38,8 +38,8 @@ namespace console.src.algorithm01
             this.Q1 = new List<List<string>>();
             this.Q2 = new List<List<string>>();
             this.L = this.Q;
-            this.maxDlzka = new List<int>();
-            this.maxDlzka.Add(this.Q[this.t].Count);
+            this.maxDlzka = this.Q[this.t].Count;
+            this.aktualnaDlzka = new List<int>();
             this.aktualnaDlzka.Add(1);
             this.ponechanaPremenna = new List<bool>();
             this.ponechanaPremenna.Add(false);
@@ -47,7 +47,7 @@ namespace console.src.algorithm01
             this.P = new List<int>(this.table.GetTable().Rows.Count);
             for (int i = 0; i < this.table.GetTable().Rows.Count; i++)
             {
-                this.P[i] = i;
+                this.P.Add(i);
             }
             this.I = new List<List<int>>();
             this.I.Add(P);
@@ -59,17 +59,42 @@ namespace console.src.algorithm01
         }
 
         public List<FuzzyRule> process() {
-            
+            vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
+           
+
+            return this.rules;
+        }
+
+        private void vykonajK2azK5(List<int> I, List<string> Q, List<string> L, int aktDlzka, bool ponechana, int t)
+        {
+            // if(this.I.Count <= t) this.I.Add(new List<int>(I)); else this.I[t] = new List<int>(I);
+            // if(this.Q.Count <= t) this.Q.Add(new List<string>(Q)); else this.Q[t] = new List<string>(Q);
+            // if(this.L.Count <= t) this.L.Add(new List<string>(L)); else this.L[t] = new List<string>(L);
+            // if(this.aktualnaDlzka.Count <= t) this.aktualnaDlzka.Add(aktDlzka); else this.aktualnaDlzka[t] = aktDlzka;
+            // if(this.ponechanaPremenna.Count <= t) this.ponechanaPremenna.Add(ponechana); else this.ponechanaPremenna[t] = ponechana;
+            set(this.I, I, t);
+            set(this.Q, Q, t);
+            set(this.L, L, t);
+            set(this.aktualnaDlzka, aktDlzka, t);
+            set(this.ponechanaPremenna, ponechana, t);
+            this.t = t;
+
             // K2
             processK2();
             // K3
             processK3();
-            // K4
-            processK4();
-            // K5
-            processK5();
+            if(aktualnaDlzka[t] >= maxDlzka)
+            {
+                // K4
+                processK4();
+                // TODO sformuj pravidla AK POTOM WOOSH
+                Console.WriteLine("DONE");
+            } else
+            {
+                // K5
+                processK5();
+            }
 
-            return this.rules;
         }
 
         private void processK2()
@@ -85,21 +110,30 @@ namespace console.src.algorithm01
                 }
             }     
 
-            this.I1[this.t] = new List<int>();
-            this.I2[this.t] = new List<int>();
+            // this.I1[this.t] = new List<int>();
+            // this.I2[this.t] = new List<int>();
+            // this.Q1[this.t] = new List<string>(this.Q[this.t]);
+            // this.Q1[this.t].Remove(odstranovana);
+            // this.Q2[this.t] = new List<string>(this.Q[this.t]);
+
+            this.set(this.I1, new List<int>(), this.t);
+            this.set(this.I2, new List<int>(), this.t);
             
-            this.Q1[this.t] = new List<string>(this.Q[this.t]);
+            this.set(this.Q1, new List<string>(this.Q[this.t]), this.t);
             this.Q1[this.t].Remove(odstranovana);
-            this.Q2[this.t] = new List<string>(this.Q[this.t]);
+            this.set(this.Q2, new List<string>(this.Q[this.t]), this.t);
 
             var Lzreduk = new List<string>(this.L[this.t]);
             Lzreduk.Remove(odstranovana);
             this.Lzredukovana.Add(Lzreduk);
 
-            if(ponechanaPremenna[this.t]) {
-                this.Z[this.t] = this.I[this.t];
+            if(ponechanaPremenna[this.t]) 
+            {
+                // this.Z[this.t] = this.I[this.t];
+                this.set(this.Z, this.I[this.t],t);
             } else{
-                this.Z[this.t] = this.P;
+                // this.Z[this.t] = this.P;
+                this.set(this.Z, this.P,t);
             }
         }
         private void processK3()
@@ -116,15 +150,17 @@ namespace console.src.algorithm01
 
         private void processK4()
         {
-            if(aktualnaDlzka[t] >= maxDlzka[t])
+            if(aktualnaDlzka[t] >= maxDlzka)
             {
                 // TODO sformuj pravidla AK POTOM WOOSH
+                Console.WriteLine("DONE");
             }
         }
 
         private void processK5()
         {
-            
+            this.vykonajK2azK5(this.I1[this.t], this.Q1[this.t],
+                                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, this.ponechanaPremenna[t], this.t + 1);
         }
 
         public bool existujeQcko(int patient) 
@@ -168,11 +204,10 @@ namespace console.src.algorithm01
                 labelValuesCP.Remove(item);
             }
             if(labelValuesCP.Count > 0){
+                return true;
+            } else{
                 return false;
             }
-
-
-            return true;
         }
 
         private List<LabelValue> GetLabelValues(DataRow patientRow, string[] labels)
@@ -292,5 +327,23 @@ namespace console.src.algorithm01
             }
             return value;
         }
+
+        private void set(List<List<int>> array, List<int> value, int t)
+        {
+            if(array.Count <= t) array.Add(new List<int>(value)); else array[t] = new List<int>(value);
+        }
+        private void set(List<List<string>> array, List<string> value, int t)
+        {
+            if(array.Count <= t) array.Add(new List<string>(value)); else array[t] = new List<string>(value);
+        }
+        private void set(List<int> array, int value, int t)
+        {
+            if(array.Count <= t) array.Add(value); else array[t] = value;
+        }
+        private void set(List<bool> array, bool value, int t)
+        {
+            if(array.Count <= t) array.Add(value); else array[t] = value;
+        }
+        
     }
 }

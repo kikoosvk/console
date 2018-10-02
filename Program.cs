@@ -39,12 +39,12 @@ namespace console
 
                     var alg = new Algorithm(table,0.1,0.8);
                     alg.process();
-                    var N01 = alg.calculateN( "A1", "C", p);
-                    var N02 = alg.calculateN( "A2", "C", p);
-                    var N03 = alg.calculateN( "A3", "C", p);
-                    var N04 = alg.calculateN( "A4", "C", p);
-                    var N05 = alg.calculateN( "A5", "C", p);
-                    Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
+                    // var N01 = alg.calculateN( "A1", "C", p);
+                    // var N02 = alg.calculateN( "A2", "C", p);
+                    // var N03 = alg.calculateN( "A3", "C", p);
+                    // var N04 = alg.calculateN( "A4", "C", p);
+                    // var N05 = alg.calculateN( "A5", "C", p);
+                    // Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
                     // Console.WriteLine("N A2: {0}", N02);
 
                     return;
