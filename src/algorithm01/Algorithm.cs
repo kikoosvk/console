@@ -157,11 +157,18 @@ namespace console.src.algorithm01
 
         private void processK5()
         {
-            var a = this.t;
-            this.vykonajK2azK5(this.I1[this.t], this.Q1[this.t],
-                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, false, this.t + 1);
-            this.vykonajK2azK5(this.I2[this.t], this.Q2[this.t],
-                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, true, this.t + 1);
+            Console.WriteLine(this.t);
+            var i1 = new List<int>(this.I1[this.t]);
+            var i2 = new List<int>(this.I2[this.t]);
+            var q1 = new List<string>(this.Q1[this.t]);
+            var q2 = new List<string>(this.Q2[this.t]);
+            var Lzreduk = this.Lzredukovana[this.t];
+            var aktDlzka = this.aktualnaDlzka[this.t] + 1;
+            var t = this.t + 1;
+            if(i1.Count > 0 && aktualnaDlzka[this.t] < maxDlzka)
+                this.vykonajK2azK5(i1, q1, Lzreduk, aktDlzka, false, t );
+            if(i2.Count > 0 && aktualnaDlzka[this.t] < maxDlzka)
+                this.vykonajK2azK5(i2, q2, Lzreduk, aktDlzka, true, t);
              
         }
 
