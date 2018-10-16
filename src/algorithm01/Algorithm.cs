@@ -60,7 +60,6 @@ namespace console.src.algorithm01
 
         public List<FuzzyRule> process() {
             vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
-           
 
             return this.rules;
         }
@@ -88,7 +87,6 @@ namespace console.src.algorithm01
                 // K4
                 processK4();
                 // TODO sformuj pravidla AK POTOM WOOSH
-                Console.WriteLine("DONE");
             } else
             {
                 // K5
@@ -130,10 +128,10 @@ namespace console.src.algorithm01
             if(ponechanaPremenna[this.t]) 
             {
                 // this.Z[this.t] = this.I[this.t];
-                this.set(this.Z, this.I[this.t],t);
+                this.set(this.Z, this.I[this.t],this.t);
             } else{
                 // this.Z[this.t] = this.P;
-                this.set(this.Z, this.P,t);
+                this.set(this.Z, this.P,this.t);
             }
         }
         private void processK3()
@@ -159,8 +157,12 @@ namespace console.src.algorithm01
 
         private void processK5()
         {
+            var a = this.t;
             this.vykonajK2azK5(this.I1[this.t], this.Q1[this.t],
-                                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, this.ponechanaPremenna[t], this.t + 1);
+                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, false, this.t + 1);
+            this.vykonajK2azK5(this.I2[this.t], this.Q2[this.t],
+                this.Lzredukovana[this.t], this.aktualnaDlzka[t] + 1, true, this.t + 1);
+             
         }
 
         public bool existujeQcko(int patient) 
