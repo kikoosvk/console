@@ -77,6 +77,7 @@ namespace console.src.algorithm01
             set(this.aktualnaDlzka, aktDlzka, t);
             set(this.ponechanaPremenna, ponechana, t);
             this.t = t;
+            Console.WriteLine(this.t);
 
             // K2
             processK2();
@@ -157,7 +158,6 @@ namespace console.src.algorithm01
 
         private void processK5()
         {
-            Console.WriteLine(this.t);
             var i1 = new List<int>(this.I1[this.t]);
             var i2 = new List<int>(this.I2[this.t]);
             var q1 = new List<string>(this.Q1[this.t]);
@@ -165,9 +165,9 @@ namespace console.src.algorithm01
             var Lzreduk = this.Lzredukovana[this.t];
             var aktDlzka = this.aktualnaDlzka[this.t] + 1;
             var t = this.t + 1;
-            if(i1.Count > 0 && aktualnaDlzka[this.t] < maxDlzka)
+            if(i1.Count > 0 && aktDlzka - 1 < maxDlzka)
                 this.vykonajK2azK5(i1, q1, Lzreduk, aktDlzka, false, t );
-            if(i2.Count > 0 && aktualnaDlzka[this.t] < maxDlzka)
+            if(i2.Count > 0 && aktDlzka - 1 < maxDlzka)
                 this.vykonajK2azK5(i2, q2, Lzreduk, aktDlzka, true, t);
              
         }
