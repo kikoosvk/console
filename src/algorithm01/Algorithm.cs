@@ -25,6 +25,7 @@ namespace console.src.algorithm01
         private List<List<int>> I1;
         private List<List<int>> I2;
         private List<List<int>> Z;
+        private List<Rule> R;
 
         public Algorithm(FuzzyTable table, double alfa, double psi)
         {
@@ -56,6 +57,7 @@ namespace console.src.algorithm01
             this.I1 = new List<List<int>>();
             this.I2 = new List<List<int>>();
             this.Lzredukovana = new List<List<string>>();
+            this.R = new List<Rule>();
         }
 
         public List<FuzzyRule> process() {
@@ -83,7 +85,7 @@ namespace console.src.algorithm01
             processK2();
             // K3
             processK3();
-            if(aktualnaDlzka[t] >= maxDlzka)
+            if(aktualnaDlzka[this.t] >= maxDlzka)
             {
                 // K4
                 processK4();
@@ -93,7 +95,6 @@ namespace console.src.algorithm01
                 // K5
                 processK5();
             }
-
         }
 
         private void processK2()
@@ -153,6 +154,35 @@ namespace console.src.algorithm01
             {
                 // TODO sformuj pravidla AK POTOM WOOSH
                 Console.WriteLine("DONE");
+                foreach (var p in this.I1[this.t])
+                {
+                    foreach (var name in this.Q1[this.t])
+                    {
+                        var rule = new Rule();
+                        var maxLabel = getMaxLabelForAttribute(p, name);
+                        rule.addItem(new Item(name, maxLabel));
+                        Predicate<Rule> exists = s => s.Equals(rule);
+                        if(!this.R.Exists(exists))
+                        {
+                            this.R.Add(rule);
+                        }
+                    }
+                }
+
+                foreach (var p in this.I2[this.t])
+                {
+                    foreach (var name in this.Q2[this.t])
+                    {
+                        var rule = new Rule();
+                        var maxLabel = getMaxLabelForAttribute(p, name);
+                        rule.addItem(new Item(name, maxLabel));
+                        Predicate<Rule> exists = s => s.Equals(rule);
+                        if(!this.R.Exists(exists))
+                        {
+                            this.R.Add(rule);
+                        }
+                    }
+                }
             }
         }
 
@@ -354,5 +384,18 @@ namespace console.src.algorithm01
             if(array.Count <= t) array.Add(value); else array[t] = value;
         }
         
+        private string getMaxLabelForAttribute(int p, string name){
+            var labelMax = "";
+            double labelMaxValue = -1;
+            foreach (var label in this.table.getAttribute(name).Labels)
+            {
+                if(labelMaxValue < (double)this.table.GetTable().Rows[p][label])
+                {
+                    labelMaxValue = (double)this.table.GetTable().Rows[p][label];
+                    labelMax = label;
+                }
+            }
+            return labelMax;
+        }
     }
 }
