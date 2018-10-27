@@ -38,8 +38,8 @@ namespace console.src.algorithm01
             this.Q.Add(this.table.getAllAttributes());
             this.Q1 = new List<List<string>>();
             this.Q2 = new List<List<string>>();
-            this.L = this.Q;
-            this.maxDlzka = this.Q[this.t].Count;
+            this.L = new List<List<string>>(this.Q);;
+            this.maxDlzka = this.Q[this.t].Count - 1;
             this.aktualnaDlzka = new List<int>();
             this.aktualnaDlzka.Add(1);
             this.ponechanaPremenna = new List<bool>();
@@ -62,6 +62,14 @@ namespace console.src.algorithm01
 
         public List<FuzzyRule> process() {
             vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
+            foreach (var item in this.R)
+            {
+                foreach (var r in item.Items)
+                {       
+                    Console.Write(r.Label+" ");
+                }
+                Console.WriteLine();
+            }
 
             return this.rules;
         }
@@ -79,7 +87,6 @@ namespace console.src.algorithm01
             set(this.aktualnaDlzka, aktDlzka, t);
             set(this.ponechanaPremenna, ponechana, t);
             this.t = t;
-            Console.WriteLine(this.t);
 
             // K2
             processK2();
@@ -125,7 +132,8 @@ namespace console.src.algorithm01
 
             var Lzreduk = new List<string>(this.L[this.t]);
             Lzreduk.Remove(odstranovana);
-            this.Lzredukovana.Add(Lzreduk);
+            // this.Lzredukovana.Add(Lzreduk);
+            this.set(this.Lzredukovana, Lzreduk, this.t);
 
             if(ponechanaPremenna[this.t]) 
             {
@@ -154,33 +162,34 @@ namespace console.src.algorithm01
             {
                 // TODO sformuj pravidla AK POTOM WOOSH
                 Console.WriteLine("DONE");
+                Console.WriteLine("Q1 size: "+ this.Q1[this.t].Count);
                 foreach (var p in this.I1[this.t])
                 {
+                    var rule = new Rule();
                     foreach (var name in this.Q1[this.t])
                     {
-                        var rule = new Rule();
                         var maxLabel = getMaxLabelForAttribute(p, name);
                         rule.addItem(new Item(name, maxLabel));
-                        Predicate<Rule> exists = s => s.Equals(rule);
-                        if(!this.R.Exists(exists))
-                        {
-                            this.R.Add(rule);
-                        }
+                    }
+                    Predicate<Rule> exists = s => s.Equals(rule);
+                    if(!this.R.Exists(exists))
+                    {
+                        this.R.Add(rule);
                     }
                 }
-
+                Console.WriteLine("Q2 size: "+ this.Q2[this.t].Count);
                 foreach (var p in this.I2[this.t])
                 {
+                    var rule = new Rule();
                     foreach (var name in this.Q2[this.t])
                     {
-                        var rule = new Rule();
                         var maxLabel = getMaxLabelForAttribute(p, name);
                         rule.addItem(new Item(name, maxLabel));
-                        Predicate<Rule> exists = s => s.Equals(rule);
-                        if(!this.R.Exists(exists))
-                        {
-                            this.R.Add(rule);
-                        }
+                    }
+                    Predicate<Rule> exists = s => s.Equals(rule);
+                    if(!this.R.Exists(exists))
+                    {
+                        this.R.Add(rule);
                     }
                 }
             }
@@ -192,13 +201,14 @@ namespace console.src.algorithm01
             var i2 = new List<int>(this.I2[this.t]);
             var q1 = new List<string>(this.Q1[this.t]);
             var q2 = new List<string>(this.Q2[this.t]);
-            var Lzreduk = this.Lzredukovana[this.t];
+            var Lzreduk = new List<string>(this.Lzredukovana[this.t]);
+            var L = this.L[this.t];
             var aktDlzka = this.aktualnaDlzka[this.t] + 1;
             var t = this.t + 1;
-            if(i1.Count > 0 && aktDlzka - 1 < maxDlzka)
-                this.vykonajK2azK5(i1, q1, Lzreduk, aktDlzka, false, t );
-            if(i2.Count > 0 && aktDlzka - 1 < maxDlzka)
-                this.vykonajK2azK5(i2, q2, Lzreduk, aktDlzka, true, t);
+            if(i1.Count > 0 && q1.Count > 0 && aktDlzka - 1 < maxDlzka)
+                this.vykonajK2azK5(i1, q1, Lzreduk, aktDlzka, true, t );
+            if(i2.Count > 0 && q2.Count > 0 && aktDlzka - 1 < maxDlzka)
+                this.vykonajK2azK5(i2, q2, Lzreduk, aktDlzka, false, t);
              
         }
 
