@@ -6,6 +6,7 @@ namespace console.src
     public class Rule : IEquatable<Rule>
     {
         private List<Item> _items;
+        private Item _C;
 
         public Rule()
         {
@@ -17,7 +18,14 @@ namespace console.src
             get {return this._items;}
         }
 
-        public void addItem(Item item) {
+        public Item C
+        {
+            get {return this._C;}
+            set {this._C = value;}
+        }
+
+        public void addItem(Item item) 
+        {
             this._items.Add(item);
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace console.src.algorithm01
 {
@@ -10,7 +11,7 @@ namespace console.src.algorithm01
         private double alfa;
         private double psi; 
         private int t;
-        private List<FuzzyRule> rules;
+        private List<Rule> rules;
         private List<List<string>> Q;
         private List<List<string>> Q1;
         private List<List<string>> Q2;
@@ -33,7 +34,7 @@ namespace console.src.algorithm01
             this.alfa = alfa;
             this.psi = psi;
             this.t = 0;
-            this.rules = new List<FuzzyRule>();
+            this.rules = new List<Rule>();
             this.Q = new List<List<string>>();
             this.Q.Add(this.table.getAllAttributes());
             this.Q1 = new List<List<string>>();
@@ -60,18 +61,28 @@ namespace console.src.algorithm01
             this.R = new List<Rule>();
         }
 
-        public List<FuzzyRule> process() {
+        public List<Rule> process() {
             vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
             foreach (var item in this.R)
             {
-                foreach (var r in item.Items)
-                {       
-                    Console.Write(r.Label+" ");
-                }
-                Console.WriteLine();
+                if (calculateSvietnik(item.Items, item.C.Label, this.P) >= this.psi)
+                {
+                    // print(item);
+                    this.rules.Add(item);
+                }                
             }
 
             return this.rules;
+        }
+
+        private void print(Rule item)
+        {
+            foreach (var r in item.Items)
+            {       
+                Console.Write(r.Label+" ");
+            }
+
+            Console.WriteLine(item.C.Label);
         }
 
         private void vykonajK2azK5(List<int> I, List<string> Q, List<string> L, int aktDlzka, bool ponechana, int t)
@@ -111,7 +122,8 @@ namespace console.src.algorithm01
             foreach (var labelAk in this.L[this.t])
             {  
                 var hodnotaN = this.calculateN(labelAk,C.Name,this.I[this.t]);
-                if(maxHodnota < hodnotaN){
+                if(maxHodnota < hodnotaN)
+                {
                     odstranovana = labelAk;
                     maxHodnota = hodnotaN;
                 }
@@ -161,8 +173,8 @@ namespace console.src.algorithm01
             if(aktualnaDlzka[t] >= maxDlzka)
             {
                 // TODO sformuj pravidla AK POTOM WOOSH
-                Console.WriteLine("DONE");
-                Console.WriteLine("Q1 size: "+ this.Q1[this.t].Count);
+                // Console.WriteLine("DONE");
+                // Console.WriteLine("Q1 size: "+ this.Q1[this.t].Count);
                 foreach (var p in this.I1[this.t])
                 {
                     var rule = new Rule();
@@ -171,13 +183,17 @@ namespace console.src.algorithm01
                         var maxLabel = getMaxLabelForAttribute(p, name);
                         rule.addItem(new Item(name, maxLabel));
                     }
+
+                    var maxLabelC = getMaxLabelForC(p,this.C.Name);
+                    rule.C = new Item(this.C.Name, maxLabelC);
+                    
                     Predicate<Rule> exists = s => s.Equals(rule);
                     if(!this.R.Exists(exists))
                     {
                         this.R.Add(rule);
                     }
                 }
-                Console.WriteLine("Q2 size: "+ this.Q2[this.t].Count);
+                // Console.WriteLine("Q2 size: "+ this.Q2[this.t].Count);
                 foreach (var p in this.I2[this.t])
                 {
                     var rule = new Rule();
@@ -186,6 +202,10 @@ namespace console.src.algorithm01
                         var maxLabel = getMaxLabelForAttribute(p, name);
                         rule.addItem(new Item(name, maxLabel));
                     }
+                    
+                    var maxLabelC = getMaxLabelForC(p,this.C.Name);
+                    rule.C = new Item(this.C.Name, maxLabelC);
+
                     Predicate<Rule> exists = s => s.Equals(rule);
                     if(!this.R.Exists(exists))
                     {
@@ -346,12 +366,31 @@ namespace console.src.algorithm01
             return top / bottom;
         }
 
+        public double calculateSvietnik(List<Item> G, string subC, List<int> rows) {
+            double top = 0;
+            double bottom = 0;
+            var listOfG = new List<double>();
+            foreach (int index in rows)
+            {
+                listOfG.Clear();
+                foreach (var g in G)
+                {
+                    listOfG.Add((double)this.table.GetTable().Rows[index][g.Label]);
+                }
+                top += minimumTNorm(listOfG.Min(), (double)this.table.GetTable().Rows[index][subC]);
+                bottom += listOfG.Min();
+            }
+            if(Double.IsNaN(top / bottom)) return 0; 
+            return top / bottom;
+        }
+
         public double minimumTNorm( double va1, double va2)
         {
             var val01 = va1 < this.alfa ? 0 : va1;
             var val02 = va2 < this.alfa ? 0 : va2;
             return val01 < val02 ? val01 : val02;
         }
+
 
         public double calculateAttributeCardinality(string name, List<int> rows)
         {
@@ -394,10 +433,26 @@ namespace console.src.algorithm01
             if(array.Count <= t) array.Add(value); else array[t] = value;
         }
         
-        private string getMaxLabelForAttribute(int p, string name){
+        private string getMaxLabelForAttribute(int p, string name)
+        {
             var labelMax = "";
             double labelMaxValue = -1;
             foreach (var label in this.table.getAttribute(name).Labels)
+            {
+                if(labelMaxValue < (double)this.table.GetTable().Rows[p][label])
+                {
+                    labelMaxValue = (double)this.table.GetTable().Rows[p][label];
+                    labelMax = label;
+                }
+            }
+            return labelMax;
+        }
+
+        private string getMaxLabelForC(int p, string name)
+        {
+            var labelMax = "";
+            double labelMaxValue = -1;
+            foreach (var label in this.table.getConsequent(name).Labels)
             {
                 if(labelMaxValue < (double)this.table.GetTable().Rows[p][label])
                 {
