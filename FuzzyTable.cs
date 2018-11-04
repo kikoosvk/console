@@ -104,11 +104,21 @@ namespace console
 
         public void AddData(dynamic data)
         {
-            var rowSize = data.rowsize.ToObject<int>();
+            var rowSize = 0;
+            foreach (var item in this.attributes.Values)
+            {
+                rowSize += item.Labels.Length;
+            }
+            
+            foreach (var item in this.consequents.Values)
+            {
+                rowSize += item.Labels.Length;
+            }
+
             var count = 0;
             var row = this.table.NewRow();
 
-            foreach (var value in data.values)
+            foreach (var value in data)
             {
 
                 row[count] = value;

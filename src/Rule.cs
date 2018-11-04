@@ -43,5 +43,17 @@ namespace console.src
             }
             return true;
         }
+
+        public override string ToString()
+        {
+            string s = "";
+            foreach (var r in this.Items)
+            {       
+                s += r.Label+" ";
+            }
+
+            s += " ->" + this.C.Label;
+            return s;
+        }
     }
 }
