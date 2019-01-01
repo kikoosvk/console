@@ -3,7 +3,8 @@ namespace console
     public class FuzzyAttribute
     {
         private string _name;
-        private string[] _labels;
+        private FuzzyAttributeLabel[] _labels;
+        
 
         public string Name
         {
@@ -11,15 +12,20 @@ namespace console
             set { _name = value; }
         }
 
-        public string[] Labels
+        public FuzzyAttributeLabel[] Labels
         {
             get { return _labels; }
         }
 
-        public FuzzyAttribute(string name, string[] labels)
+        public FuzzyAttribute(string name, FuzzyAttributeLabel[] labels)
         {
             this._name = name;
             this._labels = labels;
+        }
+
+        public virtual object Clone()
+        {
+            return new FuzzyAttribute(this.Name, (FuzzyAttributeLabel[]) this.Labels.Clone());
         }
     }
 }

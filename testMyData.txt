@@ -1,0 +1,32 @@
+{
+    "attributes": [
+        {
+            "name": "Weather",
+            "labels": ["Sunny", "Overcast"]
+        },
+        {
+            "name": "Temperature",
+            "labels": ["Cool", "Warm", "Hot"]
+        }
+        
+    ],
+    "classAttribute": {
+            "name": "Play Tennis",
+            "labels": ["No", "Yes"],
+            "positive": "Yes",
+            "negative": "No"
+        }
+    ,
+    "data":[
+		1,		0,		0,		0.8,	0.2,	0,		1,
+		0,		1,		1,		0,		0,		1,		0,
+		0.2,	0.8,	0,		1,		0,		0,		1,
+		1,		0,		0,		0,		1,		1,		0,
+		0.3,	0.7,	0,		0,		1,		0.3,	0.7,
+		1,		0,		0,		0.2,	0.8,	0,		1,
+		0,		1,		1,		0,		0,		1,		0,
+		0.2,	0.8,	0,		1,		0,		0,		1,
+		1,		0,		0,		0,		1,		1,		0,
+		0.3,	0.7,	0,		0,		1,		0.3,	0.7,
+    ]
+}

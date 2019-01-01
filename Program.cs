@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Accord.Fuzzy;
 using console.src.algorithm01;
+using diplom.Algorithms.TenCrossValidation;
 using Newtonsoft.Json;
 
 namespace console
@@ -25,10 +26,8 @@ namespace console
                     {
                         table.addAttribute(item);
                     }
-                    foreach (var item in array.consequents)
-                    { 
-                        table.addConsequent(item);
-                    }
+
+                    table.addClassAttribute(array.classAttribute);
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -37,8 +36,10 @@ namespace console
                         p[i] = i;
                     }
 
+                    // var validator = new TenCrossValidation();
+                    // validator.Validate(10, table);
                     var alg = new Algorithm(table,0.1,0.8);
-                    alg.process();
+                    var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);
                     // var N02 = alg.calculateN( "A2", "C", p);
                     // var N03 = alg.calculateN( "A3", "C", p);
@@ -46,7 +47,7 @@ namespace console
                     // var N05 = alg.calculateN( "A5", "C", p);
                     // Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
                     // Console.WriteLine("N A2: {0}", N02);
-
+                    // Console.WriteLine(rules);
                     return;
 
                 // Read the stream to a string, and write the string to the console.
