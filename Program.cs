@@ -22,12 +22,12 @@ namespace console
                     dynamic array = JsonConvert.DeserializeObject(json);
                     // Console.WriteLine(array.attributes);
                     
-                    foreach (var item in array.attributes)
-                    {
-                        table.addAttribute(item);
-                    }
-
-                    table.addClassAttribute(array.classAttribute);
+                   var aa = array.attributes;
+                   for (int i = 0; i < array.attributes.Count-1; i++)
+                   {
+                       table.addAttribute(array.attributes[i]);
+                   }
+                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "", "");
 
                     table.AddData(array.data);
                     var p = new int[20];

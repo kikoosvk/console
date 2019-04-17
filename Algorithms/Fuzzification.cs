@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Accord.Fuzzy;
 using diplom.Dtos;
-using diplom.Models;
 using static Accord.Fuzzy.TrapezoidalFunction;
 
 namespace diplom.Algorithms
