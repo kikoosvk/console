@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using diplom.Algorithms;
 
 namespace console.src.algorithm01
 {
-    public class Algorithm
+    public class Algorithm: IProcessable
     {
         private FuzzyTable table;
         private double alfa;

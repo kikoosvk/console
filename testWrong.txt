@@ -1,5 +1,5 @@
 {
-    "attributes": [
+    "attribute": [
         {
             "name": "A1",
             "labels": ["a11", "a12"]
@@ -19,7 +19,10 @@
         {
             "name": "A5",
             "labels": ["a51", "a52", "a53", "a54"]
-        },
+        }
+        
+    ],
+    "consequent": [
         {
             "name": "C",
             "labels": ["c1", "c2"]

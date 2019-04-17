@@ -46,7 +46,7 @@ namespace console
 
         }
 
-        public void addClassAttribute(dynamic item)
+        public void addClassAttribute(dynamic item, string positiveAttribute, string negativeAttribute)
         {
             // convert jsonmvalues to string
             var labels = new FuzzyAttributeLabel[item.labels.Count];
@@ -57,12 +57,10 @@ namespace console
             }
 
             var attr = new FuzzyAttribute(item.name.ToString(), labels);
-            string itemPositive = item.positive;
-            string itemNegative = item.negative;
             foreach (var label in labels)
             {
-                if(label.Name == itemPositive) this.PositiveColumn = label;
-                if(label.Name == itemNegative) this.NegativeColumn = label;
+                if(label.Name == positiveAttribute) this.PositiveColumn = label;
+                if(label.Name == negativeAttribute) this.NegativeColumn = label;
             }
             this.classAttribute = attr;
             foreach (var label in labels)

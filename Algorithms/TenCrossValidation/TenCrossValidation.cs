@@ -8,7 +8,7 @@ namespace diplom.Algorithms.TenCrossValidation
 {
     public class TenCrossValidation
     {
-        public bool Validate(int numberOfFolds, FuzzyTable fuzzyTable)
+        public ConfusionMatrix Validate(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm)
         {
             var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds;
             var confusionMatrix = new ConfusionMatrix();
@@ -17,19 +17,19 @@ namespace diplom.Algorithms.TenCrossValidation
                 var table = (FuzzyTable)fuzzyTable.Clone();
                 var fromIndex = fold * dataCountInOneReplication;
                 var testData = table.RemoveRows(fromIndex, fromIndex + dataCountInOneReplication);
-                var alg = new Algorithm(table, 0.1, 0.8);
-                var rules = alg.process();
-                if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) return false;
+                var rules = algorithm.process();
+                if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) return null;
                 // var classificator = new Classificator(rules, FuzzyTable);
                 // CalcAndSaveResults(testData, classificator);
                 CalculateResultForRules(testData, rules, confusionMatrix);
                 Console.WriteLine(fold);
             }
+            confusionMatrix.CalculatePercentNumbers();
             Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
             Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
             Console.WriteLine("Precision: "+confusionMatrix.Precision());
-            return true;
+            return confusionMatrix;
         }
 
         private void CalculateResultForRules(FuzzyTable testData, List<Rule> rules, ConfusionMatrix confusionMatrix, double tolerance = .5)
@@ -54,6 +54,7 @@ namespace diplom.Algorithms.TenCrossValidation
                     confusionMatrix.FalsePositiveCount++;
             
             }
+            confusionMatrix.DataSize += testData.GetTable().Rows.Count * 2;
         }
 
         private bool ExistsAtLeastOneRuleForEachClassAttribute(FuzzyTable table, List<Rule> rules)

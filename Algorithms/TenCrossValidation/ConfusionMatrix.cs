@@ -3,13 +3,14 @@ namespace diplom.Algorithms.TenCrossValidation
     public class ConfusionMatrix
     {
         public int TruePositiveCount {get; set; }
-        public int TruePositivePercent  {get; set; }
+        public double TruePositivePercent  {get; set; }
         public int FalsePositiveCount  {get; set; }
-        public int FalsePositivePercent  {get; set; }
+        public double FalsePositivePercent  {get; set; }
         public int TrueNegativeCount  {get; set; }
-        public int TrueNegativePercent  {get; set; }
+        public double TrueNegativePercent  {get; set; }
         public int FalseNegativeCount  {get; set; }
-        public int FalseNegativePercent  {get; set; }
+        public double FalseNegativePercent  {get; set; }
+        public int DataSize  {get; set; }
         
         public double Accuracy() {
             return (TruePositiveCount + TrueNegativeCount) / (double)(TruePositiveCount + TrueNegativeCount + FalseNegativeCount + FalsePositiveCount) ;
@@ -25,6 +26,13 @@ namespace diplom.Algorithms.TenCrossValidation
 
         public double Precision() {
             return TruePositiveCount / (double)(TruePositiveCount + FalsePositiveCount);
+        }
+
+        public void CalculatePercentNumbers() {
+            this.TruePositivePercent = this.TruePositiveCount / (double)this.DataSize;
+            this.TrueNegativePercent = this.TrueNegativeCount / (double)this.DataSize;
+            this.FalsePositivePercent = this.FalsePositiveCount / (double)this.DataSize;
+            this.FalseNegativePercent = this.FalseNegativeCount / (double)this.DataSize;
         }
     }
 }
