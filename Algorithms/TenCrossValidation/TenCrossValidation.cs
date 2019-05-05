@@ -35,12 +35,13 @@ namespace diplom.Algorithms.TenCrossValidation
         
         public ConfusionMatrix Validate02(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm)
         {
+            int instancesSize = fuzzyTable.GetTable().Rows.Count;
             int numberOfClassValues = fuzzyTable.getClassAttribute().Labels.Length;
-            int[] countClass = getClassValuesNumber(numberOfClassValues, fuzzyTable);
-            int foldSize = instances.size() / folds;
-            int[] foldClassSize = new int[countClass.length];
+            double[] countClass = getClassValuesNumber(numberOfClassValues, fuzzyTable);
+            int foldSize = instancesSize / numberOfFolds;
+            int[] foldClassSize = new int[countClass.Length];
 
-            double perc = countClass[0] / (double) instances.size();
+            double perc = countClass[0] / (double) instancesSize;
             foldClassSize[0] = (int) (foldSize * perc);
             foldClassSize[1] = foldSize - foldClassSize[0];
             var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds;
@@ -95,8 +96,8 @@ namespace diplom.Algorithms.TenCrossValidation
             confusionMatrix.DataSize += testData.GetTable().Rows.Count * 2;
         }
 
-        public int[] getClassValuesNumber(int numberOfClassValues, FuzzyTable fuzzyTable) {
-            int[] countClass = new int[numberOfClassValues];
+        public double[] getClassValuesNumber(int numberOfClassValues, FuzzyTable fuzzyTable) {
+            double[] countClass = new double[numberOfClassValues];
             String[] classValues = new String[numberOfClassValues];
             for (int i = 0; i < numberOfClassValues; i++) {
                 classValues[i] = fuzzyTable.getClassAttribute().Labels[i].Name;
@@ -113,20 +114,11 @@ namespace diplom.Algorithms.TenCrossValidation
                 var instance = fuzzyTable.GetTable().Rows[i];
                 
                 for (int j = 0; j < classValues.Length; j++) {
-                    var classAttributeValue =  this.getData(fuzzyTable, classValues[j], i);
-                    if (classValues[j].Equals( ""+((int)classAttributeValue))) {
-                        countClass[j] += 1;
-                    }
-                }
-            }
-
-            for (Instance instance
-                    :fuzzyTable.GetTable().Rows) {
-                Attribute classAttribute = instance.classAttribute();
-                for (int i = 0; i < classValues.length; i++) {
-                    if (classValues[i].equals( ""+((int)instance.value(classAttribute)))) {
-                        countClass[i] += 1;
-                    }
+                    countClass[j] += this.getData(fuzzyTable, classValues[i], i);
+                    // var classAttributeValue =  this.getData(fuzzyTable, classValues[j], i);
+                    // if (classValues[j].Equals( ""+((int)classAttributeValue))) {
+                    //     countClass[j] += this.getData(fuzzyTable, classValues[i], i);
+                    // }
                 }
             }
             return countClass;
