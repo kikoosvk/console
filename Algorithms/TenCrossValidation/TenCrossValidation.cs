@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using console;
 using console.src;
 using console.src.algorithm01;
@@ -42,16 +44,23 @@ namespace diplom.Algorithms.TenCrossValidation
             int[] foldClassSize = new int[countClass.Length];
 
             double perc = countClass[0] / (double) instancesSize;
-            foldClassSize[0] = (int) (foldSize * perc);
+            foldClassSize[0] = (int) (foldSize * perc);                             // kolko "c1" ma byt v kazom folde
             foldClassSize[1] = foldSize - foldClassSize[0];
-            var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds;
+            var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds; // aky velky fold ma byt
             var confusionMatrix = new ConfusionMatrix();
+            var noDataTable = fuzzyTable.CloneNoData();
+            var rngIndexes = getRNGIndexes(instancesSize);
 
             for (int i = 0; i < numberOfFolds; i++) {
-                Collection<Instance> instancesAdded = new ArrayList<>(foldSize);    // what will be deleted
-                int[] foldClassSizeAdded = new int[foldClassSize.length];           // what is the status of Class attrib in this fold
-                for (Instance instance :
-                        randDataWhereImRemoving) {
+                var instancesAdded = new ArrayList<>(foldSize);    // what will be deleted
+                int[] foldClassSizeAdded = new int[foldClassSize.Length];           // what is the status of Class attrib in this fold
+                for (int j = 0; j < rngIndexes.Length; j++)
+                {
+                    var index = rngIndexes[j];
+                    var c1 = this.getData(fuzzyTable, )
+                }
+                for (int index :
+                        rngIndexes) {
                     String instanceValue = ""+((int)instance.value(instance.classAttribute()));
                     for (int j = 0; j < classValues.length; j++) {
                         if (classValues[j].equals(instanceValue) && foldClassSizeAdded[j] < foldClassSize[j]) {
@@ -69,6 +78,11 @@ namespace diplom.Algorithms.TenCrossValidation
 
 
             return confusionMatrix;
+        }
+
+        private int[] getRNGIndexes(int instancesSize) {
+            Random rnd = new Random();
+            return Enumerable.Range(0, instancesSize - 1).OrderBy(c => rnd.Next()).ToArray();
         }
 
         private void CalculateResultForRules(FuzzyTable testData, List<Rule> rules, ConfusionMatrix confusionMatrix, double tolerance = .5)

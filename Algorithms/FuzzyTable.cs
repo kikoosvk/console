@@ -146,6 +146,13 @@ namespace console
             return newTable;
         }
 
+        public virtual object CloneNoData()
+        {
+            var newTable = this.Clone();
+            this.table.Rows.Clear();
+            return newTable;
+        }
+
         public FuzzyTable RemoveRows(int fromIndex, int toIndex)
         {
             var newTable = new FuzzyTable();
@@ -169,6 +176,12 @@ namespace console
 
             this.table.AcceptChanges();
             return newTable;
+        }
+
+        public void randomize() {
+            this.table.Rows.Clear();
+            var shuffled = this.table.Rows.Cast<DataRow>().OrderBy(r => rnd.Next()).CopyToDataTable();
+
         }
     }
 }
