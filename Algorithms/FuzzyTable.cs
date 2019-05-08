@@ -126,8 +126,8 @@ namespace console
             }
         }
 
-        public double getData(string attribute, int row) {
-            return (double)this.table.Rows[row][attribute];
+        public double getData(FuzzyAttributeLabel attributeLabel, int row) {
+            return (double)this.table.Rows[row][attributeLabel.Id];
         }
 
         public int DataCount()
