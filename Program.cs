@@ -52,7 +52,7 @@ namespace console
                     //     Console.WriteLine(rules[i].ToString());
                     // }
                     var validation = new TenCrossValidation();
-                    var matrix = validation.Validate(10, table, new Algorithm(table, 0.1, 0.9));
+                    var matrix = validation.Validate02(10, table, new Algorithm(table, 0.1, 0.9));
                     return;
 
                 // Read the stream to a string, and write the string to the console.

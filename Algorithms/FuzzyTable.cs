@@ -126,8 +126,12 @@ namespace console
             }
         }
 
-        public double getData(FuzzyAttributeLabel attributeLabel, int row) {
+        public double getDataByAttribute(FuzzyAttributeLabel attributeLabel, int row) {
             return (double)this.table.Rows[row][attributeLabel.Id];
+        }
+
+        public double getData(string attributeLabelId, int row) {
+            return (double)this.table.Rows[row][attributeLabelId];
         }
 
         public int DataCount()
@@ -135,7 +139,7 @@ namespace console
             return this.table.Rows.Count;
         }
 
-        public virtual object Clone()
+        public virtual FuzzyTable Clone()
         {
             var newTable = new FuzzyTable();
             newTable.attributes = new Dictionary<string, FuzzyAttribute>(this.attributes);
@@ -146,10 +150,10 @@ namespace console
             return newTable;
         }
 
-        public virtual object CloneNoData()
+        public virtual FuzzyTable CloneNoData()
         {
             var newTable = this.Clone();
-            this.table.Rows.Clear();
+            newTable.table.Rows.Clear();
             return newTable;
         }
 
@@ -180,7 +184,7 @@ namespace console
 
         public void randomize() {
             this.table.Rows.Clear();
-            var shuffled = this.table.Rows.Cast<DataRow>().OrderBy(r => rnd.Next()).CopyToDataTable();
+            //var shuffled = this.table.Rows.Cast<DataRow>().OrderBy(r => rnd.Next()).CopyToDataTable();
 
         }
     }

@@ -38,15 +38,21 @@ namespace diplom.Algorithms.TenCrossValidation
         public ConfusionMatrix Validate02(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm)
         {
             int instancesSize = fuzzyTable.GetTable().Rows.Count;
-            ArrayList[] foldsInstances = new ArrayList[instancesSize];
+            ArrayList[] foldsInstances = new ArrayList[numberOfFolds];
+            for (int i = 0; i < numberOfFolds; i++) {
+                foldsInstances[i] = new ArrayList();
+            }
             int numberOfClassValues = fuzzyTable.getClassAttribute().Labels.Length;
             FuzzyAttributeLabel[] classValues = new FuzzyAttributeLabel[numberOfClassValues];
-            double[] countClass = getClassValuesNumber(numberOfClassValues, fuzzyTable);
+            for (int i = 0; i < numberOfClassValues; i++) {
+                classValues[i] = fuzzyTable.getClassAttribute().Labels[i];
+            }
+            double[] countClass = getClassValuesNumber(classValues, numberOfClassValues, fuzzyTable);
             int foldSize = instancesSize / numberOfFolds;
-            int[] foldClassSize = new int[countClass.Length];
+            double[] foldClassSize = new double[countClass.Length];
 
             double perc = countClass[0] / (double) instancesSize;
-            foldClassSize[0] = (int) (foldSize * perc);                             // kolko "c1" ma byt v kazom folde
+            foldClassSize[0] = (int)(foldSize * perc);                             // kolko "c1" ma byt v kazom folde
             foldClassSize[1] = foldSize - foldClassSize[0];
             var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds; // aky velky fold ma byt
             var confusionMatrix = new ConfusionMatrix();
@@ -58,12 +64,26 @@ namespace diplom.Algorithms.TenCrossValidation
                 double[] foldClassSizeAdded = new double[foldClassSize.Length];     
                 foreach (int index in rngIndexes)
                 {
-                    var label1Value = this.getData(fuzzyTable, classValues[0], index);
-                    var label2Value = this.getData(fuzzyTable, classValues[1], index);
-                    foldClassSizeAdded[0] += label1Value;
-                    foldClassSizeAdded[1] += label2Value;
-                    foldsInstances[i].Add(index); // add the index to the fold
-                    instancesAdded.Add(index);
+                    var label1Value = this.getData(fuzzyTable, classValues[0], index);      // e.g c1= 0.8
+                    var label2Value = this.getData(fuzzyTable, classValues[1], index);      // e.g c2= 0.2
+                    if (label1Value > 0.5 ) // c1 > 0.5
+                    {
+                        if (foldClassSizeAdded[0] < foldClassSize[0])
+                        {
+                            foldClassSizeAdded[0] += label1Value;
+                            foldsInstances[i].Add(index); // add the index to the fold
+                            instancesAdded.Add(index);
+                        }
+                     
+                    } else { // c2 > 0.5
+                        if (foldClassSizeAdded[1] < foldClassSize[1])
+                        {
+                            foldClassSizeAdded[1] += label2Value;
+                            foldsInstances[i].Add(index); // add the index to the fold
+                            instancesAdded.Add(index);
+                        }
+                    }
+                   
                     if(foldClassSizeAdded[0] >=foldClassSize[0] && foldClassSizeAdded[1] >=foldClassSize[1])
                         break;
                 }
@@ -109,13 +129,8 @@ namespace diplom.Algorithms.TenCrossValidation
             confusionMatrix.DataSize += testData.GetTable().Rows.Count * 2;
         }
 
-        public double[] getClassValuesNumber(int numberOfClassValues, FuzzyTable fuzzyTable) {
+        public double[] getClassValuesNumber(FuzzyAttributeLabel[] classValues, int numberOfClassValues, FuzzyTable fuzzyTable) {
             double[] countClass = new double[numberOfClassValues];
-            FuzzyAttributeLabel[] classValues = new FuzzyAttributeLabel[numberOfClassValues];
-            for (int i = 0; i < numberOfClassValues; i++) {
-                classValues[i] = fuzzyTable.getClassAttribute().Labels[i];
-            }
-
 
             for (int i = 0; i < classValues.Length; i++)
             {
@@ -127,7 +142,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 var instance = fuzzyTable.GetTable().Rows[i];
                 
                 for (int j = 0; j < classValues.Length; j++) {
-                    countClass[j] += this.getData(fuzzyTable, classValues[i], i);
+                    countClass[j] += this.getData(fuzzyTable, classValues[j], i);
                     // var classAttributeValue =  this.getData(fuzzyTable, classValues[j], i);
                     // if (classValues[j].Equals( ""+((int)classAttributeValue))) {
                     //     countClass[j] += this.getData(fuzzyTable, classValues[i], i);
@@ -138,7 +153,7 @@ namespace diplom.Algorithms.TenCrossValidation
         }
 
         public double getData(FuzzyTable fuzzyTable, FuzzyAttributeLabel attributeLabel, int row) {
-            return (double)fuzzyTable.getData(attributeLabel, row);
+            return (double)fuzzyTable.getDataByAttribute(attributeLabel, row);
         }
         private bool ExistsAtLeastOneRuleForEachClassAttribute(FuzzyTable table, List<Rule> rules)
         {
