@@ -93,12 +93,56 @@ namespace diplom.Algorithms.TenCrossValidation
                     rngIndexes.Remove(item);
                 }
             }
-            
+            // now i have the folds 
+            for (var fold = 0; fold < numberOfFolds; fold++)
+            {
+                var table = (FuzzyTable)fuzzyTable.CloneNoData();
+                var testDataTable = (FuzzyTable)table.CloneNoData();
+                addFoldsDataToTableAndTestTable(table, testDataTable, foldsInstances, fold, numberOfFolds, fuzzyTable);
+                algorithm.init(table);
+                var rules = algorithm.process();
+                if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) return null;
+                // var classificator = new Classificator(rules, FuzzyTable);
+                // CalcAndSaveResults(testData, classificator);
+                CalculateResultForRules(testDataTable, rules, confusionMatrix);
+                Console.WriteLine(fold);
+            }
+            confusionMatrix.CalculatePercentNumbers();
+            Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
+            Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
+            Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
+            Console.WriteLine("Precision: "+confusionMatrix.Precision());
 
             return confusionMatrix;
         }
 
-        private ArrayList getRNGIndexes(int instancesSize) {
+        private void addFoldsDataToTableAndTestTable(FuzzyTable table, FuzzyTable testDataTable, ArrayList[] foldsInstances, int fold, int numberOfFolds, FuzzyTable fuzzyTable) 
+        {
+            for (int i = 0; i < numberOfFolds; i++)
+            {
+                if(i != fold) {
+                    var foldData = foldsInstances[i];
+                    for (int j = 0; j < foldData.Count; j++)
+                    {
+                        var index = (int) foldData[j];
+                        var data = fuzzyTable.GetTable().Rows[index];
+                        table.GetTable().ImportRow(data);
+                    }
+                } else 
+                {
+                    var foldData = foldsInstances[i];
+                    for (int j = 0; j < foldData.Count; j++)
+                    {
+                        var index = (int) foldData[j];
+                        var data = fuzzyTable.GetTable().Rows[index];
+                        testDataTable.GetTable().ImportRow(data);
+                    }
+                }
+            }
+        }
+
+        private ArrayList getRNGIndexes(int instancesSize) 
+        {
             Random rnd = new Random();
             var array = Enumerable.Range(0, instancesSize - 1).OrderBy(c => rnd.Next()).ToList();
             return new ArrayList(array);

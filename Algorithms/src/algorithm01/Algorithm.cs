@@ -29,11 +29,15 @@ namespace console.src.algorithm01
         private List<List<int>> Z;
         private List<Rule> R;
 
-        public Algorithm(FuzzyTable table, double alfa, double psi)
+        public Algorithm(double alfa, double psi)
         {
-            this.table = table;
             this.alfa = alfa;
             this.psi = psi;
+        }
+
+        public void init(FuzzyTable table)
+        {
+            this.table = table;
             this.t = 0;
             this.rules = new List<Rule>();
             this.Q = new List<List<string>>();
