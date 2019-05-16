@@ -8,26 +8,31 @@ namespace console.src.algorithm01
 {
     public class Algorithm: IProcessable
     {
-        private FuzzyTable table;
-        private double alfa;
-        private double psi; 
-        private int t;
-        private List<Rule> rules;
-        private List<List<string>> Q;
-        private List<List<string>> Q1;
-        private List<List<string>> Q2;
-        private List<List<string>> L;
-        private List<List<string>> Lzredukovana;
-        private int maxDlzka;
-        private List<int> aktualnaDlzka;
-        private List<bool> ponechanaPremenna;
-        private FuzzyAttribute C;
-        private List<int> P;
-        private List<List<int>> I;
-        private List<List<int>> I1;
-        private List<List<int>> I2;
-        private List<List<int>> Z;
-        private List<Rule> R;
+        protected FuzzyTable table;
+        protected double alfa;
+        protected double psi; 
+        protected int t;
+        protected List<Rule> rules;
+        protected List<List<string>> Q;
+        protected List<List<string>> Q1;
+        protected List<List<string>> Q2;
+        protected List<List<string>> L;
+        protected List<List<string>> Lzredukovana;
+        protected int maxDlzka;
+        protected List<int> aktualnaDlzka;
+        protected List<bool> ponechanaPremenna;
+        protected FuzzyAttribute C;
+        protected List<int> P;
+        protected List<List<int>> I;
+        protected List<List<int>> I1;
+        protected List<List<int>> I2;
+        protected List<List<int>> Z;
+        protected List<Rule> R;
+
+        public Algorithm(double alfa)
+        {
+            this.alfa = alfa;
+        }
 
         public Algorithm(double alfa, double psi)
         {
@@ -90,7 +95,7 @@ namespace console.src.algorithm01
             Console.WriteLine(item.C.Label);
         }
 
-        private void vykonajK2azK5(List<int> I, List<string> Q, List<string> L, int aktDlzka, bool ponechana, int t)
+        protected void vykonajK2azK5(List<int> I, List<string> Q, List<string> L, int aktDlzka, bool ponechana, int t)
         {
             // if(this.I.Count <= t) this.I.Add(new List<int>(I)); else this.I[t] = new List<int>(I);
             // if(this.Q.Count <= t) this.Q.Add(new List<string>(Q)); else this.Q[t] = new List<string>(Q);
