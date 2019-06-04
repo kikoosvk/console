@@ -29,9 +29,10 @@ namespace console.Algorithms.tests
         public void Algorithm01TestFromPublication()
         {
             var table = new FuzzyTable();
+            output.WriteLine("Algorithm01TestFromPublication STARTED");
             try
             {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader("test.txt"))
+                using (StreamReader sr = new StreamReader("../../../Algorithms/tests/test.txt"))
                 {
                     String json = sr.ReadToEnd();
                     dynamic array = JsonConvert.DeserializeObject(json);
@@ -68,6 +69,7 @@ namespace console.Algorithms.tests
             }
             catch (Exception e)
             {
+                output.WriteLine(e.Message.ToString());
                 Assert.True(false);
             }
         }
@@ -75,9 +77,10 @@ namespace console.Algorithms.tests
         public void Algorithm02TestFromPublication()
         {
             var table = new FuzzyTable();
+            output.WriteLine("Algorithm02TestFromPublication STARTED");
             try
             {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader("test.txt"))
+                using (StreamReader sr = new StreamReader("../../../Algorithms/tests/test.txt"))
                 {
                     String json = sr.ReadToEnd();
                     dynamic array = JsonConvert.DeserializeObject(json);
@@ -114,6 +117,7 @@ namespace console.Algorithms.tests
             }
             catch (Exception e)
             {
+                output.WriteLine(e.Message.ToString());
                 Assert.True(false);
             }
         }

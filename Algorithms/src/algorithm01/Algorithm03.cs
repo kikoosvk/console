@@ -6,13 +6,13 @@ namespace console.src.algorithm01
 {
     public class Algorithm03 : Algorithm
     {
-        public Algorithm02(double alfa, Dictionary<string, double> psi) : base(alfa)
+        public Algorithm03(double alfa, double psi) : base(alfa)
         {
             this.psi = psi;
             this.alfa = alfa;
         }
 
-        protected processK3()
+        protected void processK3()
         {
             foreach (var pacient in this.I[t])
             {
