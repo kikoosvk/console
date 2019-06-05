@@ -166,7 +166,7 @@ namespace console.src.algorithm01
                 this.set(this.Z, this.P,this.t);
             }
         }
-        protected void processK3()
+        protected virtual void processK3()
         {
             foreach (var pacient in this.I[t])
             {

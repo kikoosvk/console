@@ -38,7 +38,7 @@ namespace console
 
                     // var validator = new TenCrossValidation();
                     // validator.Validate(10, table);
-                    var alg = new Algorithm(0.1,0.8);
+                    var alg = new Algorithm03(0.1,0.8, 0.88);
                     alg.init(table);
                     var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);

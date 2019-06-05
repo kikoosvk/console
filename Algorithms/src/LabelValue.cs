@@ -7,6 +7,7 @@ namespace console.src
     {
         private string _label;
         private double _value;
+        private int _indexValue;
 
         public LabelValue(string label, double value)
         {
@@ -19,10 +20,17 @@ namespace console.src
             get {return this._label;}
             set {this._label = value;}
         }
+        
         public double Value
         {
             get {return this._value;}
             set {this._value = value;}
+        }
+
+        public int IndexValue
+        {
+            get{ return this._indexValue;}
+            set {this._indexValue = value;}
         }
 
             // public int Compare(LabelValue x, LabelValue y)

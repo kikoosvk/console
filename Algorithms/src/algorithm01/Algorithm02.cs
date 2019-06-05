@@ -14,7 +14,7 @@ namespace console.src.algorithm01
             this.alfa = alfa;
         }
 
-          public List<Rule> process() {
+          public new List<Rule> process() {
             vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
             foreach (var item in this.R)
             {
