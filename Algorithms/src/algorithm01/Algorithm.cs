@@ -295,7 +295,7 @@ namespace console.src.algorithm01
             var labelValuesPom = new List<LabelValue>();
             foreach (var label in labels)
             {
-                labelValuesPom.Add(new LabelValue(label.Name, (double)patientRow[label.Id]));
+                labelValuesPom.Add(new LabelValue(label.Name, label.Id, (double)patientRow[label.Id]));
             }
             labelValuesPom.Sort();
             labelValuesPom.Reverse();

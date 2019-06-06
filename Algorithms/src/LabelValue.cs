@@ -6,19 +6,27 @@ namespace console.src
     public class LabelValue : IComparable<LabelValue>, IEquatable<LabelValue>
     {
         private string _label;
+        private string _id;
         private double _value;
         private int _indexValue;
 
-        public LabelValue(string label, double value)
+        public LabelValue(string label, string id, double value)
         {
             this._label = label;
             this._value = value;
+            this._id = id;
         }
 
         public string Label
         {
             get {return this._label;}
             set {this._label = value;}
+        }
+
+        public string Id
+        {
+            get {return this._id;}
+            set {this._id = value;}
         }
         
         public double Value
