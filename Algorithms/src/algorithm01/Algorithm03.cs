@@ -71,7 +71,7 @@ namespace console.src.algorithm01
             foreach (var labelAk in this.Q1[this.t])
             {
                 var labels = this.table.getAttribute(labelAk).Labels;
-                formulaValue += getNumerator(p, q, labels) / getDenominator(p, q, labels);
+                formulaValue += getNumerator(p, q, labels) / getDenominator(p, q, labels.Length);
             }
 
             Console.WriteLine("AAA");
