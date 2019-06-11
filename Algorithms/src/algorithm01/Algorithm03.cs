@@ -50,9 +50,9 @@ namespace console.src.algorithm01
 
         public new bool check(DataRow p, DataRow q)
         {
-            var attributes = 1 - (bigFormulaAttributes(p, q) / getLabelsCount()) >= this.zeta;
-            var classAttributes = 1 - (bigFormulaClass(p, q) / this.Q.Count) >= this.zeta;
-            return attributes || classAttributes;
+            var attributesValue = 1 - (bigFormulaAttributes(p, q) / getLabelsCount());
+            var classAttributesValue = 1 - (bigFormulaClass(p, q) / this.Q.Count) ;
+            return attributesValue  >= this.zeta && classAttributesValue >= this.zeta;
         }
 
         public int getLabelsCount()
@@ -74,7 +74,6 @@ namespace console.src.algorithm01
                 formulaValue += getNumerator(p, q, labels) / getDenominator(p, q, labels.Length);
             }
 
-            Console.WriteLine("AAA");
             return formulaValue;
         }
 
@@ -149,7 +148,7 @@ namespace console.src.algorithm01
                     pomLabelIndex = label.IndexValue;
                     pomLabelValue = label.Value;
                 }
-                labelsWithIndex.Add(label.Label, label);
+                labelsWithIndex.Add(label.Id, label);
             }
 
             return labelsWithIndex;
@@ -160,8 +159,6 @@ namespace console.src.algorithm01
             double val = Math.Abs(pLabelOrder[label.Id].IndexValue - qLabelOrder[label.Id].IndexValue) + 1;
             return val * Math.Abs(pLabelOrder[label.Id].Value - qLabelOrder[label.Id].IndexValue);
         }
-
-
 
     }
 }
