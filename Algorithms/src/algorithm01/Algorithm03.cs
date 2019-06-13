@@ -51,7 +51,7 @@ namespace console.src.algorithm01
         public new bool check(DataRow p, DataRow q)
         {
             var attributesValue = 1 - (bigFormulaAttributes(p, q) / getLabelsCount());
-            var classAttributesValue = 1 - (bigFormulaClass(p, q) / this.Q.Count) ;
+            var classAttributesValue = 1 - (bigFormulaClass(p, q) / this.C.Labels.Length) ;
             return attributesValue  >= this.zeta && classAttributesValue >= this.zeta;
         }
 
@@ -71,7 +71,8 @@ namespace console.src.algorithm01
             foreach (var labelAk in this.Q1[this.t])
             {
                 var labels = this.table.getAttribute(labelAk).Labels;
-                formulaValue += getNumerator(p, q, labels) / getDenominator(p, q, labels.Length);
+                var value = getNumerator(p, q, labels) / getDenominator(p, q, labels.Length);
+                formulaValue += value;
             }
 
             return formulaValue;
@@ -100,7 +101,7 @@ namespace console.src.algorithm01
             var labels = new List<LabelValue>(labelsSize);
             for (int i = 0; i < labelsSize; i++)
             {
-                labels.Add(new LabelValue("" + i, "" + i, 1 - 0.01 * 1));
+                labels.Add(new LabelValue("" + i, "" + i, 1 - 0.01 * i));
             }
 
             double numberatorValue = 0;
@@ -157,7 +158,7 @@ namespace console.src.algorithm01
         private double getNumeratorValueForSum(Dictionary<string, LabelValue> pLabelOrder, Dictionary<string, LabelValue> qLabelOrder, FuzzyAttributeLabel label)
         {
             double val = Math.Abs(pLabelOrder[label.Id].IndexValue - qLabelOrder[label.Id].IndexValue) + 1;
-            return val * Math.Abs(pLabelOrder[label.Id].Value - qLabelOrder[label.Id].IndexValue);
+            return val * Math.Abs(pLabelOrder[label.Id].Value - qLabelOrder[label.Id].Value);
         }
 
     }
