@@ -75,7 +75,8 @@ namespace console.src.algorithm01
             vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
             foreach (var item in this.R)
             {
-                if (calculateSvietnik(item.Items, item.C.Id, this.P) >= this.psi)
+                var svietnik = calculateSvietnik(item.Items, item.C.Id, this.P);
+                if (svietnik >= this.psi)
                 {
                     // print(item);
                     this.rules.Add(item);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Accord.Fuzzy;
@@ -15,7 +16,7 @@ namespace console
             var table = new FuzzyTable();
              try
             {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader("test.txt"))
+                using (StreamReader sr = new StreamReader("sample_data_fuzzificated.txt"))
                 
                 {
                     String json = sr.ReadToEnd();
@@ -27,7 +28,7 @@ namespace console
                    {
                        table.addAttribute(array.attributes[i]);
                    }
-                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "Name0", "Name1");
+                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "c1", "c2");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -38,9 +39,12 @@ namespace console
 
                     // var validator = new TenCrossValidation();
                     // validator.Validate(10, table);
+                    var psi = new Dictionary<string, double>();
+                    psi["c1"] = 0.8;
+                    psi["c2"] = 0.8;
                     var alg = new Algorithm03(0.1,0.8, 0.88);
-                    alg.init(table);
-                    var rules = alg.process();
+                    // alg.init(table);
+                    // var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);
                     // var N02 = alg.calculateN( "A2", "C", p);
                     // var N03 = alg.calculateN( "A3", "C", p);
@@ -48,12 +52,12 @@ namespace console
                     // var N05 = alg.calculateN( "A5", "C", p);
                     // Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
                     // Console.WriteLine("N A2: {0}", N02);
-                    for (int i = 0; i < rules.Count; i++)
-                    {
-                        Console.WriteLine(rules[i].ToString());
-                    }
-                    // var validation = new TenCrossValidation();
-                    // var matrix = validation.Validate02(10, table, new Algorithm(0.1, 0.9));
+                    // for (int i = 0; i < rules.Count; i++)
+                    // {
+                    //     Console.WriteLine(rules[i].ToString());
+                    // }
+                    var validation = new TenCrossValidation();
+                    var matrix = validation.Validate02(10, table, alg);
                     return;
 
                 // Read the stream to a string, and write the string to the console.

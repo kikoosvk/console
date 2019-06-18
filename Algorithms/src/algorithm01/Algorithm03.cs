@@ -50,8 +50,8 @@ namespace console.src.algorithm01
 
         public new bool check(DataRow p, DataRow q)
         {
-            var attributesValue = 1 - (bigFormulaAttributes(p, q) / getLabelsCount());
-            var classAttributesValue = 1 - (bigFormulaClass(p, q) / this.C.Labels.Length) ;
+            var attributesValue = 1 - (bigFormulaAttributes(p, q) / this.Q1[this.t].Count);
+            var classAttributesValue = 1 - (bigFormulaClass(p, q)) ;
             return attributesValue  >= this.zeta && classAttributesValue >= this.zeta;
         }
 
