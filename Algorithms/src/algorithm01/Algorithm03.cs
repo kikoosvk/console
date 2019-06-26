@@ -74,6 +74,7 @@ namespace console.src.algorithm01
             {
                 var labels = this.table.getAttribute(labelAk).Labels;
                 var value = getNumerator(p, q, labels) / getDenominator(p, q, labels.Length);
+                value = value > 1? 1: value;
                 var numberator = getNumerator(p, q, labels);
                 var denominator = getDenominator(p, q, labels.Length);
                 formulaValueNum += numberator;
@@ -104,11 +105,7 @@ namespace console.src.algorithm01
 
         private double getDenominator(DataRow p, DataRow q, int labelsSize)
         {
-            var labels = new List<LabelValue>(labelsSize);
-            for (int i = 0; i < labelsSize; i++)
-            {
-                labels.Add(new LabelValue("" + i, "" + i, 1 - 0.01 * i));
-            }
+            var potentialMinimalDifference = 0.0001;
 
             double numberatorValue = 0;
             for (int i = 0; i < labelsSize; i++)
@@ -122,7 +119,7 @@ namespace console.src.algorithm01
                 else
                 {
                     double leftValue = Math.Abs(1 - (labelsSize - i)) + 1; // this is always 1 - x
-                    double rightValue = Math.Abs(0 - (1 - (0.01 * i)) );
+                    double rightValue = Math.Abs(0 - (1 - (potentialMinimalDifference * i)) );
                     numberatorValue += leftValue * rightValue;
                 }
             }
@@ -165,13 +162,9 @@ namespace console.src.algorithm01
         private double getNumeratorValueForSum(Dictionary<string, LabelValue> pLabelOrder, Dictionary<string, LabelValue> qLabelOrder, FuzzyAttributeLabel label)
         {
             double val = Math.Abs(pLabelOrder[label.Id].IndexValue - qLabelOrder[label.Id].IndexValue) + 1;
-            return val * Math.Abs(getValue(pLabelOrder[label.Id].Value) - getValue(qLabelOrder[label.Id].Value));
+            return val * Math.Abs(pLabelOrder[label.Id].Value - qLabelOrder[label.Id].Value);
         }
 
-        private double getValue(double val)
-        {
-            return val < this.alfa? 0 : val;
-        }
 
     }
 }
