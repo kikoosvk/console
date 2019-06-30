@@ -105,7 +105,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 // var classificator = new Classificator(rules, FuzzyTable);
                 // CalcAndSaveResults(testData, classificator);
                 CalculateResultForRules(testDataTable, rules, confusionMatrix);
-                Console.WriteLine(fold);
+                // Console.WriteLine(fold);
             }
             confusionMatrix.CalculatePercentNumbers();
             Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());

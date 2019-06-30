@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Accord.Fuzzy;
+using console.Algorithms.src.algorithm01;
 using console.src.algorithm01;
 using diplom.Algorithms.TenCrossValidation;
 using Newtonsoft.Json;
@@ -16,7 +17,8 @@ namespace console
             var table = new FuzzyTable();
              try
             {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader("test.txt"))
+                // using (StreamReader sr = new StreamReader("test.txt"))
+                using (StreamReader sr = new StreamReader("sample_data_fuzzificated.txt"))
                 
                 {
                     String json = sr.ReadToEnd();
@@ -44,9 +46,24 @@ namespace console
                     psi["c2"] = 0.8;
                     // var alg = new Algorithm02(0.1,psi);
                     // var alg = new Algorithm(0.1, 0.8);
-                    var alg = new Algorithm03(0.1, 0.8, 0.88);
-                    alg.init(table);
-                    var rules = alg.process();
+                    // var alg = new Algorithm03(0.1, 0.8, 0.88);
+                    // alg.init(table);
+                    // var validation = new TenCrossValidation();
+                    // var matrix = validation.Validate02(5, table, alg);
+                    for (int i = 0; i < 10; i++)
+                    {
+                    var zeta = 0.8+0.02*i;
+                    var alg02 = new Algorithm04(0.1, 0.8, zeta);
+                    alg02.init(table);
+                    Console.WriteLine("CURRENT ZETA: "+(zeta));
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    }
+                    // var alg02 = new Algorithm04(0.1, 0.8);
+                    // alg02.init(table);
+                    // var validation02 = new TenCrossValidation();
+                    // var matrix02 = validation02.Validate02(5, table, alg02);
+                    // var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);
                     // var N02 = alg.calculateN( "A2", "C", p);
                     // var N03 = alg.calculateN( "A3", "C", p);
@@ -54,10 +71,10 @@ namespace console
                     // var N05 = alg.calculateN( "A5", "C", p);
                     // Console.WriteLine("N A1: {0}, A2: {1}, A3: {2}, A4: {3}, A5: {4}", N01, N02,N03,N04,N05);
                     // Console.WriteLine("N A2: {0}", N02);
-                    for (int i = 0; i < rules.Count; i++)
-                    {
-                        Console.WriteLine(rules[i].ToString());
-                    }
+                    // for (int i = 0; i < rules.Count; i++)
+                    // {
+                    //     Console.WriteLine(rules[i].ToString());
+                    // }
                     // var validation = new TenCrossValidation();
                     // var matrix = validation.Validate02(5, table, alg);
                     return;
