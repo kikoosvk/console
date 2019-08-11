@@ -18,7 +18,7 @@ namespace console
              try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("breast_cancer_first_fuzzy.json"))
+                using (StreamReader sr = new StreamReader("data/wdbc_out02.json"))
                 
                 {
                     String json = sr.ReadToEnd();
@@ -30,7 +30,7 @@ namespace console
                    {
                        table.addAttribute(array.attributes[i]);
                    }
-                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "Name1", "Name0");
+                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "positive", "negative");
 
                     table.AddData(array.data);
                     var p = new int[20];
