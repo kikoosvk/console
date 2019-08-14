@@ -18,7 +18,7 @@ namespace console
              try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("abaloneFuzzy.json"))
+                using (StreamReader sr = new StreamReader("wdbc_out_weka.json"))
                 
                 {
                     String json = sr.ReadToEnd();
@@ -30,7 +30,7 @@ namespace console
                    {
                        table.addAttribute(array.attributes[i]);
                    }
-                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "Name0", "Name4");
+                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "negative", "positive");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -47,18 +47,18 @@ namespace console
                     // var alg = new Algorithm02(0.1,psi);
                     var alg = new Algorithm(0.1, 0.8);
                     // var alg = new Algorithm03(0.1, 0.8, 0.88);
-                    alg.init(table);
-                    var validation = new TenCrossValidation();
-                    var matrix = validation.Validate02(2, table, alg);
-                    // for (int i = 0; i < 10; i++)
-                    // {
-                    // var zeta = 0.8+0.02*i;
-                    // var alg02 = new Algorithm04(0.1, 0.8, zeta);
-                    // alg02.init(table);
-                    // Console.WriteLine("CURRENT ZETA: "+(zeta));
-                    // var validation02 = new TenCrossValidation();
-                    // var matrix02 = validation02.Validate02(10, table, alg02);
-                    // }
+                    // alg.init(table);
+                    // var validation = new TenCrossValidation();
+                    // var matrix = validation.Validate02(10, table, alg);
+                    for (int i = 0; i < 10; i++)
+                    {
+                    var beta = 0.0+0.05*i;
+                    var alg02 = new Algorithm(beta, 0.75);
+                    alg02.init(table);
+                    Console.WriteLine("CURRENT beta: "+(beta));
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    }
                     // var alg02 = new Algorithm04(0.1, 0.8);
                     // alg02.init(table);
                     // var validation02 = new TenCrossValidation();
