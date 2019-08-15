@@ -24,7 +24,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 // var classificator = new Classificator(rules, FuzzyTable);
                 // CalcAndSaveResults(testData, classificator);
                 CalculateResultForRules(testData, rules, confusionMatrix);
-                Console.WriteLine(fold);
+                // Console.WriteLine(fold);
             }
             confusionMatrix.CalculatePercentNumbers();
             Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
@@ -35,9 +35,10 @@ namespace diplom.Algorithms.TenCrossValidation
         }
 
         
-        public ConfusionMatrix Validate02(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm)
+        public ConfusionMatrix Validate02(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm, double tolerance = .5)
         {
             int instancesSize = fuzzyTable.GetTable().Rows.Count;
+            Console.WriteLine("Instances size: "+instancesSize);
             ArrayList[] foldsInstances = new ArrayList[numberOfFolds];
             for (int i = 0; i < numberOfFolds; i++) {
                 foldsInstances[i] = new ArrayList();
@@ -104,7 +105,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) return null;
                 // var classificator = new Classificator(rules, FuzzyTable);
                 // CalcAndSaveResults(testData, classificator);
-                CalculateResultForRules(testDataTable, rules, confusionMatrix);
+                CalculateResultForRules(testDataTable, rules, confusionMatrix, tolerance);
                 // Console.WriteLine(fold);
             }
             confusionMatrix.CalculatePercentNumbers();
@@ -170,7 +171,7 @@ namespace diplom.Algorithms.TenCrossValidation
                     confusionMatrix.FalsePositiveCount++;
             
             }
-            confusionMatrix.DataSize += testData.GetTable().Rows.Count * 2;
+            confusionMatrix.DataSize += testData.GetTable().Rows.Count;
         }
 
         public double[] getClassValuesNumber(FuzzyAttributeLabel[] classValues, int numberOfClassValues, FuzzyTable fuzzyTable) {

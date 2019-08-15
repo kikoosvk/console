@@ -50,14 +50,14 @@ namespace console
                     // alg.init(table);
                     // var validation = new TenCrossValidation();
                     // var matrix = validation.Validate02(10, table, alg);
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 21; i++)
                     {
                     var beta = 0.0+0.05*i;
-                    var alg02 = new Algorithm(beta, 0.75);
+                    var alg02 = new Algorithm(0.1, 0.75);
                     alg02.init(table);
-                    Console.WriteLine("CURRENT beta: "+(beta));
+                    Console.WriteLine("CURRENT tolerance: "+(beta));
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    var matrix02 = validation02.Validate02(10, table, alg02, beta);
                     }
                     // var alg02 = new Algorithm04(0.1, 0.8);
                     // alg02.init(table);
