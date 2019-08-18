@@ -31,6 +31,7 @@ namespace diplom.Algorithms.TenCrossValidation
             Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
             Console.WriteLine("Precision: "+confusionMatrix.Precision());
+            Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
             return confusionMatrix;
         }
 
@@ -38,7 +39,6 @@ namespace diplom.Algorithms.TenCrossValidation
         public ConfusionMatrix Validate02(int numberOfFolds, FuzzyTable fuzzyTable, IProcessable algorithm, double tolerance = .5)
         {
             int instancesSize = fuzzyTable.GetTable().Rows.Count;
-            Console.WriteLine("Instances size: "+instancesSize);
             ArrayList[] foldsInstances = new ArrayList[numberOfFolds];
             for (int i = 0; i < numberOfFolds; i++) {
                 foldsInstances[i] = new ArrayList();
@@ -52,9 +52,15 @@ namespace diplom.Algorithms.TenCrossValidation
             int foldSize = instancesSize / numberOfFolds;
             double[] foldClassSize = new double[countClass.Length];
 
-            double perc = countClass[0] / (double) instancesSize;
-            foldClassSize[0] = (int)(foldSize * perc);                             // kolko "c1" ma byt v kazom folde
-            foldClassSize[1] = foldSize - foldClassSize[0];
+            // double perc = countClass[0] / (double) instancesSize;
+            // foldClassSize[0] = (int)(foldSize * perc);                             // kolko "c1" ma byt v kazom folde
+            // foldClassSize[1] = foldSize - foldClassSize[0];
+            for (int i = 0; i < foldClassSize.Length ; i++) {
+                double perc = countClass[i] / (double) instancesSize;
+                foldClassSize[i] = (foldSize * perc);
+            }
+
+
             var dataCountInOneReplication = fuzzyTable.DataCount() / numberOfFolds; // aky velky fold ma byt
             var confusionMatrix = new ConfusionMatrix();
             var noDataTable = fuzzyTable.CloneNoData();
@@ -109,10 +115,11 @@ namespace diplom.Algorithms.TenCrossValidation
                 // Console.WriteLine(fold);
             }
             confusionMatrix.CalculatePercentNumbers();
-            Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
-            Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
-            Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
-            Console.WriteLine("Precision: "+confusionMatrix.Precision());
+            // Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
+            // Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
+            // Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
+            // Console.WriteLine("Precision: "+confusionMatrix.Precision());
+            Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
 
             return confusionMatrix;
         }
