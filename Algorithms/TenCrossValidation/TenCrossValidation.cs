@@ -108,7 +108,11 @@ namespace diplom.Algorithms.TenCrossValidation
                 addFoldsDataToTableAndTestTable(table, testDataTable, foldsInstances, fold, numberOfFolds, fuzzyTable);
                 algorithm.init(table);
                 var rules = algorithm.process();
-                if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) return null;
+                if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) 
+                {
+                    Console.WriteLine("Rules is empty: " + rules.ToString());
+                    return null;
+                }
                 // var classificator = new Classificator(rules, FuzzyTable);
                 // CalcAndSaveResults(testData, classificator);
                 CalculateResultForRules(testDataTable, rules, confusionMatrix, tolerance);

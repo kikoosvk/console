@@ -18,7 +18,7 @@ namespace console
              try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("./data/data.json"))
+                using (StreamReader sr = new StreamReader("./data/abalone_cele_fuzzy_better.json"))
                 
                 {
                     String json = sr.ReadToEnd();
