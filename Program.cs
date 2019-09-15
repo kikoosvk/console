@@ -18,7 +18,7 @@ namespace console
              try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("./data/abalone_cele_fuzzy_better.json"))
+                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
                 
                 {
                     String json = sr.ReadToEnd();
@@ -30,7 +30,7 @@ namespace console
                    {
                        table.addAttribute(array.attributes[i]);
                    }
-                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "Name0", "Name1");
+                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "young", "old");
 
                     table.AddData(array.data);
                     var p = new int[20];
