@@ -110,7 +110,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 var rules = algorithm.process();
                 if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) 
                 {
-                    Console.WriteLine("Rules is empty: " + rules.ToString());
+                    // Console.WriteLine("Rules is empty: " + rules.ToString());
                     return null;
                 }
                 // var classificator = new Classificator(rules, FuzzyTable);
@@ -123,7 +123,7 @@ namespace diplom.Algorithms.TenCrossValidation
             // Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             // Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
             // Console.WriteLine("Precision: "+confusionMatrix.Precision());
-            Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
+            // Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
 
             return confusionMatrix;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -45,20 +46,26 @@ namespace console
                     psi["c1"] = 0.8;
                     psi["c2"] = 0.8;
                     // var alg = new Algorithm02(0.1,psi);
-                    var alg = new Algorithm(0.1, 0.7);
-                    // var alg = new Algorithm03(0.1, 0.8, 0.88);
-                    alg.init(table);
-                    var validation = new TenCrossValidation();
-                    var matrix = validation.Validate02(10, table, alg);
-                    // for (int i = 0; i < 21; i++)
-                    // {
-                    // var beta = 0.0+0.02*i;
-                    // var alg02 = new Algorithm(beta, 0.7);
-                    // alg02.init(table);
-                    // Console.WriteLine("CURRENT beta: "+(beta));
-                    // var validation02 = new TenCrossValidation();
-                    // var matrix02 = validation02.Validate02(10, table, alg02, 0.5);
-                    // }
+                    int size = 10;
+                    Double[] kriteriaArray = new Double[size];
+                    for (int i = 0; i < size; i++)
+                    {
+                        var beta = 0.20+0.05*i;
+                        var dataSize = 0;
+                        for (int j = 0; j < 20; j++)
+                        {
+                            var alg02 = new Algorithm(beta, 0.6);
+                            alg02.init(table);
+                            var validation02 = new TenCrossValidation();
+                            var matrix02 = validation02.Validate02(10, table, alg02);
+                            if(matrix02 != null) {
+                                var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                                kriteriaArray[i] += kriteria;
+                                dataSize++;
+                            }
+                        }
+                         Console.WriteLine("CURRENT beta: "+(beta)+ "  :"+ kriteriaArray[i] / dataSize);
+                    }
                     // var alg02 = new Algorithm04(0.1, 0.8);
                     // alg02.init(table);
                     // var validation02 = new TenCrossValidation();
