@@ -16,22 +16,22 @@ namespace console
         static void Main(string[] args)
         {
             var table = new FuzzyTable();
-             try
+            try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
                 using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
-                
+
                 {
                     String json = sr.ReadToEnd();
                     dynamic array = JsonConvert.DeserializeObject(json);
                     // Console.WriteLine(array.attributes);
-                    
-                   var aa = array.attributes;
-                   for (int i = 0; i < array.attributes.Count-1; i++)
-                   {
-                       table.addAttribute(array.attributes[i]);
-                   }
-                    table.addClassAttribute(array.attributes[array.attributes.Count-1], "young", "old");
+
+                    var aa = array.attributes;
+                    for (int i = 0; i < array.attributes.Count - 1; i++)
+                    {
+                        table.addAttribute(array.attributes[i]);
+                    }
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -42,34 +42,32 @@ namespace console
 
                     // var validator = new TenCrossValidation();
                     // validator.Validate(10, table);
-                    var psi = new Dictionary<string, double>();
-                    psi["c1"] = 0.8;
-                    psi["c2"] = 0.8;
-                    // var alg = new Algorithm02(0.1,psi);
-                    int size = 10;
-                    Double[] kriteriaArray = new Double[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        var beta = 0.20+0.05*i;
-                        var dataSize = 0;
-                        for (int j = 0; j < 20; j++)
-                        {
-                            var alg02 = new Algorithm(beta, 0.6);
-                            alg02.init(table);
-                            var validation02 = new TenCrossValidation();
-                            var matrix02 = validation02.Validate02(10, table, alg02);
-                            if(matrix02 != null) {
-                                var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
-                                kriteriaArray[i] += kriteria;
-                                dataSize++;
-                            }
-                        }
-                         Console.WriteLine("CURRENT beta: "+(beta)+ "  :"+ kriteriaArray[i] / dataSize);
-                    }
-                    // var alg02 = new Algorithm04(0.1, 0.8);
+                    // var psi = new Dictionary<string, double>();
+                    // psi["young"] = 0.6;
+                    // psi["medium"] = 0.6;
+                    // psi["old"] = 0.8;
+
+                    performAlg02(table);
+                    // var alg01 = new Algorithm(0.1, 0.6);
+                    // alg01.init(table);
+                    // var validation01 = new TenCrossValidation();
+                    // var matrix01 = validation01.Validate02(10, table, alg01);
+
+                    // var alg02 = new Algorithm02(0.1, psi);
                     // alg02.init(table);
                     // var validation02 = new TenCrossValidation();
-                    // var matrix02 = validation02.Validate02(5, table, alg02);
+                    // var matrix02 = validation02.Validate02(10, table, alg02);
+
+                    // var alg03 = new Algorithm03(0.1, 0.6, 0.88);
+                    // alg03.init(table);
+                    // var validation03 = new TenCrossValidation();
+                    // var matrix03 = validation03.Validate02(10, table, alg03);
+
+                    // var alg04 = new Algorithm04(0.1, 0.6, 0.8);
+                    // alg04.init(table);
+                    // var validation04 = new TenCrossValidation();
+                    // var matrix04 = validation04.Validate02(10, table, alg04);
+
                     // var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);
                     // var N02 = alg.calculateN( "A2", "C", p);
@@ -86,17 +84,18 @@ namespace console
                     // var matrix = validation.Validate02(5, table, alg);
                     return;
 
-                // Read the stream to a string, and write the string to the console.
+                    // Read the stream to a string, and write the string to the console.
                     String line = sr.ReadLine();
-                    
+
                     var names = line.Split(',');
-                    
+
                     foreach (var value in names)
                     {
                         table.GetTable().Columns.Add(value.Trim(), value.GetType());
                     }
 
-                    while((line = sr.ReadLine())!= null){
+                    while ((line = sr.ReadLine()) != null)
+                    {
                         var values = line.Split(',');
                         table.GetTable().Rows.Add(values);
                     }
@@ -108,34 +107,62 @@ namespace console
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e);
             }
-            
-            
+        }
+
+
+        static void performAlg02(FuzzyTable table)
+        {
+            int size = 11;
+            Double[] kriteriaArray = new Double[size];
+            for (int i = 0; i < size; i++)
+            {
+                var beta = 0.0 + 0.1 * i;
+                var psi = new Dictionary<string, double>();
+                psi["young"] = 0.5;
+                psi["medium"] = 0.1;
+                psi["old"] = beta;
+                var dataSize = 0;
+                for (int j = 0; j < 50; j++)
+                {
+                    var alg02 = new Algorithm02(0.3, psi);
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    if (matrix02 != null)
+                    {
+                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                        kriteriaArray[i] += kriteria;
+                        dataSize++;
+                    }
+                }
+                Console.WriteLine("CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+            }
         }
     }
 }
 
-            // Console.WriteLine("Hello World!");
-            // FuzzySet mozgovaNie = new FuzzySet("mozgova prihoda nie", new SingletonFunction(0));
-            // FuzzySet mozgovaAno = new FuzzySet("mozgova prihoda ano", new SingletonFunction(1));
-            // FuzzySet vekStredny = new FuzzySet("stredny", new TrapezoidalFunction(30,60,90));
-            // FuzzySet vekVysoky = new FuzzySet("vysoky", new TrapezoidalFunction(60,90,TrapezoidalFunction.EdgeType.Left));
-            // FuzzySet respicacneZiadne = new FuzzySet("respiracne ochorenie ziadne", new SingletonFunction(0));
-            // FuzzySet respicacneSlabe = new FuzzySet("respiracne ochorenie slabe", new SingletonFunction(1));
-            // FuzzySet respicacneMierne = new FuzzySet("respiracne ochorenie mierne", new SingletonFunction(2));
-            // FuzzySet respicacneZavazne = new FuzzySet("mozgova prihoda zavazne", new SingletonFunction(3));
-            // FuzzySet rizikoNizke = new FuzzySet("riziko nizke", new SingletonFunction(0));
-            // FuzzySet rizikoVysoke = new FuzzySet("riziko vysoke", new SingletonFunction(1));
-            
-            // var mozhovaPrihodaDATA = new int[] {1,0,0,1,0,0,1};
-            // var vekDATA = new int[] {65,53,80,49,50,67,82};
-            // var respiracneDATA = new int[] {2,1,0,0,1,2,1};
-            // var rizikoDATA = new int[] {1,0,0,0,0,0,1};
+// Console.WriteLine("Hello World!");
+// FuzzySet mozgovaNie = new FuzzySet("mozgova prihoda nie", new SingletonFunction(0));
+// FuzzySet mozgovaAno = new FuzzySet("mozgova prihoda ano", new SingletonFunction(1));
+// FuzzySet vekStredny = new FuzzySet("stredny", new TrapezoidalFunction(30,60,90));
+// FuzzySet vekVysoky = new FuzzySet("vysoky", new TrapezoidalFunction(60,90,TrapezoidalFunction.EdgeType.Left));
+// FuzzySet respicacneZiadne = new FuzzySet("respiracne ochorenie ziadne", new SingletonFunction(0));
+// FuzzySet respicacneSlabe = new FuzzySet("respiracne ochorenie slabe", new SingletonFunction(1));
+// FuzzySet respicacneMierne = new FuzzySet("respiracne ochorenie mierne", new SingletonFunction(2));
+// FuzzySet respicacneZavazne = new FuzzySet("mozgova prihoda zavazne", new SingletonFunction(3));
+// FuzzySet rizikoNizke = new FuzzySet("riziko nizke", new SingletonFunction(0));
+// FuzzySet rizikoVysoke = new FuzzySet("riziko vysoke", new SingletonFunction(1));
 
-            // for (int i = 0; i < 7; i++)
-            // {
-            //     Console.WriteLine(mozgovaNie.GetMembership(mozhovaPrihodaDATA[i])+" "+(mozgovaAno.GetMembership(mozhovaPrihodaDATA[i]))+" "+
-            //                         vekStredny.GetMembership(vekDATA[i])+" "+(vekVysoky.GetMembership(vekDATA[i]))
-            //                         +" "+respicacneZiadne.GetMembership(respiracneDATA[i])+" "+(respicacneSlabe.GetMembership(respiracneDATA[i]))
-            //                         +" "+respicacneMierne.GetMembership(respiracneDATA[i])+" "+(respicacneZavazne.GetMembership(respiracneDATA[i]))
-            //                         +" "+rizikoNizke.GetMembership(rizikoDATA[i])+" "+(rizikoVysoke.GetMembership(rizikoDATA[i])));
-            // }
+// var mozhovaPrihodaDATA = new int[] {1,0,0,1,0,0,1};
+// var vekDATA = new int[] {65,53,80,49,50,67,82};
+// var respiracneDATA = new int[] {2,1,0,0,1,2,1};
+// var rizikoDATA = new int[] {1,0,0,0,0,0,1};
+
+// for (int i = 0; i < 7; i++)
+// {
+//     Console.WriteLine(mozgovaNie.GetMembership(mozhovaPrihodaDATA[i])+" "+(mozgovaAno.GetMembership(mozhovaPrihodaDATA[i]))+" "+
+//                         vekStredny.GetMembership(vekDATA[i])+" "+(vekVysoky.GetMembership(vekDATA[i]))
+//                         +" "+respicacneZiadne.GetMembership(respiracneDATA[i])+" "+(respicacneSlabe.GetMembership(respiracneDATA[i]))
+//                         +" "+respicacneMierne.GetMembership(respiracneDATA[i])+" "+(respicacneZavazne.GetMembership(respiracneDATA[i]))
+//                         +" "+rizikoNizke.GetMembership(rizikoDATA[i])+" "+(rizikoVysoke.GetMembership(rizikoDATA[i])));
+// }
