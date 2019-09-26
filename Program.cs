@@ -110,6 +110,31 @@ namespace console
         }
 
 
+        static void performAlg03(FuzzyTable table)
+        {
+            int size = 11;
+            Double[] kriteriaArray = new Double[size];
+            for (int i = 0; i < size; i++)
+            {
+                var beta = 0.0 + 0.1 * i;
+                var dataSize = 0;
+                for (int j = 0; j < 50; j++)
+                {
+                    var alg02 = new Algorithm03(0.3, 0.3, beta);
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    if (matrix02 != null)
+                    {
+                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                        kriteriaArray[i] += kriteria;
+                        dataSize++;
+                    }
+                }
+                Console.WriteLine("CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+            }
+        }
+
         static void performAlg02(FuzzyTable table)
         {
             int size = 11;
