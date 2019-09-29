@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Accord.Fuzzy;
 using console.Algorithms.src.algorithm01;
+using console.Experiments;
 using console.src.algorithm01;
 using diplom.Algorithms.TenCrossValidation;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ namespace console
     {
         static void Main(string[] args)
         {
+            Algorithm04Experiments.run();
             var table = new FuzzyTable();
             try
             {   // Open the text file using a stream reader.
@@ -47,7 +49,7 @@ namespace console
                     // psi["medium"] = 0.6;
                     // psi["old"] = 0.8;
 
-                    performAlg02(table);
+                    // performAlg04(table, 2);
                     // var alg01 = new Algorithm(0.1, 0.6);
                     // alg01.init(table);
                     // var validation01 = new TenCrossValidation();
@@ -109,18 +111,19 @@ namespace console
             }
         }
 
-
-        static void performAlg03(FuzzyTable table)
+        static void performAlg04(FuzzyTable table, int indexForParam)
         {
-            int size = 11;
+            Console.WriteLine("performAlg04");
+            int size = 3;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.0 + 0.1 * i;
+                var beta = 1.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < 3; j++)
                 {
-                    var alg02 = new Algorithm03(0.3, 0.3, beta);
+                    Algorithm04 alg02 = new Algorithm04(0.3, 0.6, beta);
+
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
                     var matrix02 = validation02.Validate02(10, table, alg02);
@@ -131,7 +134,34 @@ namespace console
                         dataSize++;
                     }
                 }
-                Console.WriteLine("CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+                Console.WriteLine(indexForParam + " CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+            }
+        }
+
+        static void performAlg03(FuzzyTable table)
+        {
+            Console.WriteLine("performAlg03");
+            int size = 1;
+            Double[] kriteriaArray = new Double[size];
+            for (int i = 0; i < size; i++)
+            {
+                var beta = 0.0 + 0.1 * i;
+                var dataSize = 0;
+                for (int j = 0; j < 150; j++)
+                {
+                    Algorithm03 alg02 = new Algorithm03(0.3, 0.4, 0.6);
+                   
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    if (matrix02 != null)
+                    {
+                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                        kriteriaArray[i] += kriteria;
+                        dataSize++;
+                    }
+                }
+                Console.WriteLine(" CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
             }
         }
 
