@@ -17,11 +17,12 @@ namespace console
         static void Main(string[] args)
         {
             Algorithm04Experiments.run();
+            return;
             var table = new FuzzyTable();
             try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader("./data/abalone/3bins/abalone_fuzzy.json"))
 
                 {
                     String json = sr.ReadToEnd();
@@ -33,7 +34,7 @@ namespace console
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -69,6 +70,24 @@ namespace console
                     // alg04.init(table);
                     // var validation04 = new TenCrossValidation();
                     // var matrix04 = validation04.Validate02(10, table, alg04);
+
+                    var kriteriaArray = 0.0;
+                    var dataSize = 0.0;
+                    for (int j = 0; j < 1; j++)
+                    {
+                        Algorithm04 alg04 = new Algorithm04(0.4, 0.6, 0.7);
+
+                        alg04.init(table);
+                        var validation02 = new TenCrossValidation();
+                        var matrix02 = validation02.Validate02(10, table, alg04);
+                        if (matrix02 != null)
+                        {
+                            var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                            kriteriaArray += kriteria;
+                            dataSize++;
+                        }
+                    }
+                      Console.WriteLine(" Algorithm04:" + kriteriaArray / dataSize);
 
                     // var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);

@@ -11,7 +11,7 @@ namespace console.Experiments
 {
     public class Algorithm04Experiments
     {
-
+        private static string filePath = "./data/abalone/3bins/abalone_fuzzy.json";
 
         public static void run()
         {
@@ -19,8 +19,8 @@ namespace console.Experiments
             thread1.Start();
             Thread thread2 = new Thread(PerformAlg04param02);
             thread2.Start();
-            Thread thread3 = new Thread(PerformAlg04param03);
-            thread3.Start();
+            // Thread thread3 = new Thread(PerformAlg04param03);
+            // thread3.Start();
 
         }
 
@@ -29,7 +29,7 @@ namespace console.Experiments
             var table = new FuzzyTable();
             try
             {
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -41,7 +41,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -66,7 +66,7 @@ namespace console.Experiments
             var table = new FuzzyTable();
             try
             {
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -78,7 +78,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -103,7 +103,7 @@ namespace console.Experiments
             var table = new FuzzyTable();
             try
             {
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -115,7 +115,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -142,9 +142,9 @@ namespace console.Experiments
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0 + 0.1 * i;
+                var beta = 0.5 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < 150; j++)
                 {
                     // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
                     Algorithm04 alg02;
