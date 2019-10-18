@@ -17,10 +17,10 @@ namespace console.Experiments
         {
             Thread thread1 = new Thread(PerformAlg04param01);
             thread1.Start();
-            Thread thread2 = new Thread(PerformAlg04param02);
-            thread2.Start();
-            // Thread thread3 = new Thread(PerformAlg04param03);
-            // thread3.Start();
+            // Thread thread2 = new Thread(PerformAlg04param02);
+            // thread2.Start();
+            Thread thread3 = new Thread(PerformAlg04param03);
+            thread3.Start();
 
         }
 
@@ -142,21 +142,21 @@ namespace console.Experiments
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.5 + 0.1 * i;
+                var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 150; j++)
+                for (int j = 0; j < 50; j++)
                 {
                     // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
                     Algorithm04 alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm04(beta,  0, 0);
+                        alg02 = new Algorithm04(beta,  0.5, 0);
                         break; 
                         case 1:
                         alg02 = new Algorithm04(0,beta, 0);
                         break;
                         default:
-                        alg02 = new Algorithm04(0, 0, beta);
+                        alg02 = new Algorithm04(0, 0.5, beta);
                         break;
                     }
 
