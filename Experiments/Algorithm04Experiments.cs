@@ -11,14 +11,14 @@ namespace console.Experiments
 {
     public class Algorithm04Experiments
     {
-        private static string filePath = "./data/abalone/3bins/abalone_fuzzy.json";
+        private static string filePath = "./data/car/car.json";
 
         public static void run()
         {
             Thread thread1 = new Thread(PerformAlg04param01);
             thread1.Start();
-            // Thread thread2 = new Thread(PerformAlg04param02);
-            // thread2.Start();
+            Thread thread2 = new Thread(PerformAlg04param02);
+            thread2.Start();
             Thread thread3 = new Thread(PerformAlg04param03);
             thread3.Start();
 
@@ -41,7 +41,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "unacc", "acc");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -78,7 +78,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "unacc", "acc");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -115,7 +115,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "unacc", "acc");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -150,13 +150,13 @@ namespace console.Experiments
                     Algorithm04 alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm04(beta,  0.5, 0);
+                        alg02 = new Algorithm04(beta,  0, 0);
                         break; 
                         case 1:
                         alg02 = new Algorithm04(0,beta, 0);
                         break;
                         default:
-                        alg02 = new Algorithm04(0, 0.5, beta);
+                        alg02 = new Algorithm04(0, 0, beta);
                         break;
                     }
 

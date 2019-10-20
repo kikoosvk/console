@@ -22,7 +22,8 @@ namespace console
             try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
-                using (StreamReader sr = new StreamReader("./data/abalone/3bins/abalone_fuzzy.json"))
+                // using (StreamReader sr = new StreamReader("./data/abalone/3bins/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader("./data/car/car.json"))
 
                 {
                     String json = sr.ReadToEnd();
@@ -34,6 +35,7 @@ namespace console
                     {
                         table.addAttribute(array.attributes[i]);
                     }
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "unacc", "acc");
                     table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
