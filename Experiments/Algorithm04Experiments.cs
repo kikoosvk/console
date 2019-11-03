@@ -11,7 +11,8 @@ namespace console.Experiments
 {
     public class Algorithm04Experiments
     {
-        private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
+        // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
+        private static string filePath = "./processed.cleveland.data.json";
 
         public static void run()
         {
@@ -41,7 +42,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -78,7 +79,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -115,7 +116,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1],  "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -144,7 +145,7 @@ namespace console.Experiments
             {
                 var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 750; j++)
+                for (int j = 0; j < 50; j++)
                 {
                     // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
                     Algorithm04 alg02;

@@ -51,16 +51,13 @@
         {
             "name": "thal",
             "labels": ["Normal", "FixedDefect", "ReversbleDefect"]
+        },
+        {
+            "name": "C",
+            "labels": ["noHeartDisease", "heartDisease"],
         }
         
     ],
-    "classAttribute": {
-            "name": "C",
-            "labels": ["noHeartDisease", "heartDisease"],
-            "positive": "noHeartDisease",
-            "negative": "heartDisease"
-        }
-    ,
     "data":[
         0,0.68,1,0,0,0,0,1,0,1,0,1,0,1,0,0,1,1,0,1,0,0,1,1,0,0,0,0,0,1,1,0,0,0,1,
         0,0.68,1,0,0,0,0,1,1,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,0,0,0,0,1,0,0,0,1,0,1,
