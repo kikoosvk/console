@@ -1,4 +1,5 @@
-using System;
+  using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,23 +10,23 @@ using Newtonsoft.Json;
 
 namespace console.Experiments
 {
-    public class Algorithm04Experiments
+    public class Algorithm02Experiments
     {
         // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-        private static string filePath = "./data/processed_fuzzy.cleveland.json";
+         private static string filePath = "./data/heart/processed_fuzzy.cleveland.json";
 
         public static void run()
         {
-            Thread thread1 = new Thread(PerformAlg04param01);
+            Thread thread1 = new Thread(PerformAlg02param01);
             thread1.Start();
-            Thread thread2 = new Thread(PerformAlg04param02);
+            Thread thread2 = new Thread(PerformAlg02param02);
             thread2.Start();
-            Thread thread3 = new Thread(PerformAlg04param03);
-            thread3.Start();
+            // Thread thread3 = new Thread(PerformAlg02param03);
+            // thread3.Start();
 
         }
 
-        static void PerformAlg04param01()
+        static void PerformAlg02param01()
         {
             var table = new FuzzyTable();
             try
@@ -42,7 +43,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -51,7 +52,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 0);
+                    performAlg02(table, 0);
                 }
             }
             catch (Exception e)
@@ -62,7 +63,7 @@ namespace console.Experiments
             }
         }
 
-        static void PerformAlg04param02()
+        static void PerformAlg02param02()
         {
             var table = new FuzzyTable();
             try
@@ -79,7 +80,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -88,7 +89,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 1);
+                    performAlg02(table, 1);
                 }
             }
             catch (Exception e)
@@ -99,7 +100,7 @@ namespace console.Experiments
             }
         }
 
-        static void PerformAlg04param03()
+        static void PerformAlg02param03()
         {
             var table = new FuzzyTable();
             try
@@ -116,7 +117,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "heartDisease", "noHeartDisease");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -125,7 +126,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 2);
+                    performAlg02(table, 2);
                 }
             }
             catch (Exception e)
@@ -136,28 +137,32 @@ namespace console.Experiments
             }
         }
 
-        static void performAlg04(FuzzyTable table, int indexForParam)
+        static void performAlg02(FuzzyTable table, int indexForParam)
         {
-            Console.WriteLine("performAlg04Exp: "+indexForParam);
+            Console.WriteLine("performAlg02Exp: "+indexForParam);
             int size = 11;
             Double[] kriteriaArray = new Double[size];
+            var psi = new Dictionary<string, double>();
+            psi["yes"] = 0;
+            psi["no"] = 0;
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.0 + 0.1 * i;
+                var beta = 0.4 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < 10; j++)
                 {
-                    // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
-                    Algorithm04 alg02;
+                    Algorithm02 alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm04(beta,  0, 0);
+                        psi["yes"] = beta;
+                        alg02 = new Algorithm02(0.1, psi);
                         break; 
                         case 1:
-                        alg02 = new Algorithm04(0,beta, 0);
+                        psi["no"] = beta;
+                        alg02 = new Algorithm02(0.1, psi);
                         break;
                         default:
-                        alg02 = new Algorithm04(0,0, beta);
+                        alg02 = new Algorithm02(0.1, psi);
                         break;
                     }
 
