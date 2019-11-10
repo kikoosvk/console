@@ -10,7 +10,7 @@ namespace console.Experiments
     public class Algorithm03Experiments
     {
      
-
+         private static string filePath = "./data/heart/processed_fuzzy.cleveland.json";
             public static void run()
             {
                 Thread thread1 = new Thread(PerformAlg03param01);
@@ -26,7 +26,7 @@ namespace console.Experiments
               var table = new FuzzyTable();
             try
             {   
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -38,7 +38,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -63,7 +63,7 @@ namespace console.Experiments
               var table = new FuzzyTable();
             try
             {   
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -75,7 +75,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -100,7 +100,7 @@ namespace console.Experiments
               var table = new FuzzyTable();
             try
             {   
-                using (StreamReader sr = new StreamReader("./data/abalone_fuzzy.json"))
+                using (StreamReader sr = new StreamReader(filePath))
 
                 {
                     String json = sr.ReadToEnd();
@@ -112,7 +112,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "young", "old");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -141,7 +141,7 @@ namespace console.Experiments
             {
                 var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 150; j++)
+                for (int j = 0; j < 20; j++)
                 {
                     Algorithm03 alg02;
                     switch(indexForParam){

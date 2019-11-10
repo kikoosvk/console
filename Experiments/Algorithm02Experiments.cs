@@ -147,7 +147,7 @@ namespace console.Experiments
             psi["no"] = 0;
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.4 + 0.1 * i;
+                var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
                 for (int j = 0; j < 10; j++)
                 {

@@ -16,8 +16,8 @@ namespace console
     {
         static void Main(string[] args)
         {
-            Algorithm02Experiments.run();
-            return;
+            // Algorithm04Experiments.run();
+            // return;
             var table = new FuzzyTable();
             try
             {   // Open the text file using a stream reader.
@@ -36,7 +36,7 @@ namespace console
                         table.addAttribute(array.attributes[i]);
                     }
                     table.addClassAttribute(array.attributes[array.attributes.Count - 1], "unacc", "acc");
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
+                    // table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -46,50 +46,50 @@ namespace console
                     }
 
                     // var validator = new TenCrossValidation();
-                    // validator.Validate(10, table);
-                    // var psi = new Dictionary<string, double>();
-                    // psi["young"] = 0.6;
-                    // psi["medium"] = 0.6;
+                    // validator.Validate02(10, table);
+                    var psi = new Dictionary<string, double>();
+                    psi["acc"] = 0.6;
+                    psi["unacc"] = 0.8;
                     // psi["old"] = 0.8;
 
-                    // performAlg04(table, 2);
-                    // var alg01 = new Algorithm(0.1, 0.6);
-                    // alg01.init(table);
-                    // var validation01 = new TenCrossValidation();
-                    // var matrix01 = validation01.Validate02(10, table, alg01);
+                        // performAlg04(table, 2);
+                    var alg01 = new Algorithm(0.1, 0.6);
+                    alg01.init(table);
+                    var validation01 = new TenCrossValidation();
+                    var matrix01 = validation01.Validate02(10, table, alg01);
 
-                    // var alg02 = new Algorithm02(0.1, psi);
-                    // alg02.init(table);
-                    // var validation02 = new TenCrossValidation();
-                    // var matrix02 = validation02.Validate02(10, table, alg02);
+                    var alg02 = new Algorithm02(0.1, psi);
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(10, table, alg02);
 
-                    // var alg03 = new Algorithm03(0.1, 0.6, 0.88);
-                    // alg03.init(table);
-                    // var validation03 = new TenCrossValidation();
-                    // var matrix03 = validation03.Validate02(10, table, alg03);
+                    var alg03 = new Algorithm03(0.1, 0.6, 0.88);
+                    alg03.init(table);
+                    var validation03 = new TenCrossValidation();
+                    var matrix03 = validation03.Validate02(10, table, alg03);
 
-                    // var alg04 = new Algorithm04(0.1, 0.6, 0.8);
-                    // alg04.init(table);
-                    // var validation04 = new TenCrossValidation();
-                    // var matrix04 = validation04.Validate02(10, table, alg04);
+                    var alg04 = new Algorithm04(0.4, 0.6, 0.7);
+                    alg04.init(table);
+                    var validation04 = new TenCrossValidation();
+                    var matrix04 = validation04.Validate02(10, table, alg04);
 
-                    var kriteriaArray = 0.0;
-                    var dataSize = 0.0;
-                    for (int j = 0; j < 1; j++)
-                    {
-                        Algorithm04 alg04 = new Algorithm04(0.4, 0.6, 0.7);
+                    // var kriteriaArray = 0.0;
+                    // var dataSize = 0.0;
+                    // for (int j = 0; j < 1; j++)
+                    // {
+                    //     Algorithm04 alg04 = new Algorithm04(0.4, 0.6, 0.7);
 
-                        alg04.init(table);
-                        var validation02 = new TenCrossValidation();
-                        var matrix02 = validation02.Validate02(10, table, alg04);
-                        if (matrix02 != null)
-                        {
-                            var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
-                            kriteriaArray += kriteria;
-                            dataSize++;
-                        }
-                    }
-                      Console.WriteLine(" Algorithm04:" + kriteriaArray / dataSize);
+                    //     alg04.init(table);
+                    //     var validation02 = new TenCrossValidation();
+                    //     var matrix02 = validation02.Validate02(10, table, alg04);
+                    //     if (matrix02 != null)
+                    //     {
+                    //         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                    //         kriteriaArray += kriteria;
+                    //         dataSize++;
+                    //     }
+                    // }
+                    //   Console.WriteLine(" Algorithm04:" + kriteriaArray / dataSize);
 
                     // var rules = alg.process();
                     // var N01 = alg.calculateN( "A1", "C", p);

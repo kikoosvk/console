@@ -123,7 +123,7 @@ namespace diplom.Algorithms.TenCrossValidation
             // Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             // Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
             // Console.WriteLine("Precision: "+confusionMatrix.Precision());
-            // Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
+            Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
 
             return confusionMatrix;
         }
