@@ -10,7 +10,7 @@ namespace console.Experiments
     public class Algorithm01Experiments
     {
 
-        private static string filePath = "./data/heart/processed_fuzzy.cleveland.json";
+        private static string filePath = "./data/hepatitis/hcv_1_fuzzy.json";
         public static void run()
         {
             // Thread thread1 = new Thread(PerformAlg01param01);
@@ -36,7 +36,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "cirhoza", "small");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -73,7 +73,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "cirhoza", "small");
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -96,13 +96,13 @@ namespace console.Experiments
         static void performAlg01(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg01");
-            int size = 6;
+            int size = 3;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.76 + 0.02 * i;
+                var beta = 0.8 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 2; j++)
                 {
                     Algorithm alg02;
                     switch (indexForParam)
@@ -112,7 +112,7 @@ namespace console.Experiments
                             break;
                         case 1:
                         default:
-                            alg02 = new Algorithm(0.1, beta);
+                            alg02 = new Algorithm(0, beta);
                             break;
                     }
 

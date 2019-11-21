@@ -16,8 +16,8 @@ namespace console
     {
         static void Main(string[] args)
         {
-            // Algorithm04Experiments.run();
-            // return;
+            Algorithm01Experiments.run();
+            return;
             var table = new FuzzyTable();
             try
             {   // Open the text file using a stream reader.
