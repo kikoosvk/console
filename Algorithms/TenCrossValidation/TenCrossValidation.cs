@@ -26,7 +26,7 @@ namespace diplom.Algorithms.TenCrossValidation
                 CalculateResultForRules(testData, rules, confusionMatrix);
                 // Console.WriteLine(fold);
             }
-            confusionMatrix.CalculatePercentNumbers();
+
             Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
             Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
@@ -118,12 +118,12 @@ namespace diplom.Algorithms.TenCrossValidation
                 CalculateResultForRules(testDataTable, rules, confusionMatrix, tolerance);
                 // Console.WriteLine(fold);
             }
-            confusionMatrix.CalculatePercentNumbers();
+
             // Console.WriteLine("Accuracy: "+confusionMatrix.Accuracy());
             // Console.WriteLine("Sensitivity: "+confusionMatrix.Sensitivity());
             // Console.WriteLine("Specificity: "+confusionMatrix.Specificity());
             // Console.WriteLine("Precision: "+confusionMatrix.Precision());
-            Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
+            // Console.WriteLine("Kriteria: "+(confusionMatrix.Sensitivity() + confusionMatrix.Specificity()) / 2);
 
             return confusionMatrix;
         }
@@ -182,7 +182,6 @@ namespace diplom.Algorithms.TenCrossValidation
                     confusionMatrix.FalsePositiveCount++;
             
             }
-            confusionMatrix.DataSize += testData.GetTable().Rows.Count;
         }
 
         public double[] getClassValuesNumber(FuzzyAttributeLabel[] classValues, int numberOfClassValues, FuzzyTable fuzzyTable) {

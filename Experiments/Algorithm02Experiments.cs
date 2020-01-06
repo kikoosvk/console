@@ -13,8 +13,12 @@ namespace console.Experiments
     public class Algorithm02Experiments
     {
         // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-         private static string filePath = "./data/heart/processed_fuzzy.cleveland.json";
+         private static string filePath = "./data/hepatitis/hcv_fuzzy_2v2_class.json";
 
+        private static void addClass(FuzzyTable table, dynamic array)
+        {
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "hard", "low");
+        }
         public static void run()
         {
             Thread thread1 = new Thread(PerformAlg02param01);
@@ -43,7 +47,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -80,7 +84,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -117,7 +121,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
 
                     table.AddData(array.data);
                     var p = new int[20];

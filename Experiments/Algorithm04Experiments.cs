@@ -12,16 +12,60 @@ namespace console.Experiments
     public class Algorithm04Experiments
     {
         // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-         private static string filePath = "./data/heart/processed_fuzzy.cleveland.json";
 
+        private static string filePath = "./data/hepatitis/hcv_1_fuzzy.json";
+
+        private static void addClass(FuzzyTable table, dynamic array)
+        {
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "cirhoza");
+        }
+        
+        static void performAlg04(FuzzyTable table, int indexForParam)
+        {
+            Console.WriteLine("performAlg04Exp: "+indexForParam);
+            int size = 11;
+            Double[] kriteriaArray = new Double[size];
+            for (int i = 0; i < size; i++)
+            {
+                var beta = 0 + 0.1 * i;
+                var dataSize = 0;
+                for (int j = 0; j < 3; j++)
+                {
+                    // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
+                    Algorithm04 alg02;
+                    switch(indexForParam){
+                        case 0:
+                        alg02 = new Algorithm04(beta,  0, 0);
+                        break; 
+                        case 1:
+                        alg02 = new Algorithm04(0,beta, 1);
+                        break;
+                        default:
+                        alg02 = new Algorithm04(0, 0, beta);
+                        break;
+                    }
+
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(3, table, alg02);
+                    if (matrix02 != null)
+                    {
+                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                        kriteriaArray[i] += kriteria;
+                        dataSize++;
+                    }
+                }
+                Console.WriteLine(indexForParam + " CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+            }
+        }
         public static void run()
         {
-            Thread thread1 = new Thread(PerformAlg04param01);
-            thread1.Start();
+            // Thread thread1 = new Thread(PerformAlg04param01);
+            // thread1.Start();
             Thread thread2 = new Thread(PerformAlg04param02);
             thread2.Start();
-            Thread thread3 = new Thread(PerformAlg04param03);
-            thread3.Start();
+            // Thread thread3 = new Thread(PerformAlg04param03);
+            // thread3.Start();
 
         }
 
@@ -42,7 +86,8 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
+
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -79,7 +124,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -116,7 +161,7 @@ namespace console.Experiments
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    addClass(table, array);
 
                     table.AddData(array.data);
                     var p = new int[20];
@@ -136,44 +181,6 @@ namespace console.Experiments
             }
         }
 
-        static void performAlg04(FuzzyTable table, int indexForParam)
-        {
-            Console.WriteLine("performAlg04Exp: "+indexForParam);
-            int size = 11;
-            Double[] kriteriaArray = new Double[size];
-            for (int i = 0; i < size; i++)
-            {
-                var beta = 0.0 + 0.1 * i;
-                var dataSize = 0;
-                for (int j = 0; j < 20; j++)
-                {
-                    // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
-                    Algorithm04 alg02;
-                    switch(indexForParam){
-                        case 0:
-                        alg02 = new Algorithm04(beta,  0, 0);
-                        break; 
-                        case 1:
-                        alg02 = new Algorithm04(0,beta, 0);
-                        break;
-                        default:
-                        alg02 = new Algorithm04(0,0, beta);
-                        break;
-                    }
-
-                    alg02.init(table);
-                    var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(10, table, alg02);
-                    if (matrix02 != null)
-                    {
-                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
-                        kriteriaArray[i] += kriteria;
-                        dataSize++;
-                    }
-                }
-                Console.WriteLine(indexForParam + " CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
-            }
-        }
 
     }
 

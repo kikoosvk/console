@@ -10,7 +10,6 @@ namespace diplom.Algorithms.TenCrossValidation
         public double TrueNegativePercent  {get; set; }
         public int FalseNegativeCount  {get; set; }
         public double FalseNegativePercent  {get; set; }
-        public int DataSize  {get; set; }
         
         public double Accuracy() {
             return (TruePositiveCount + TrueNegativeCount) / (double)(TruePositiveCount + TrueNegativeCount + FalseNegativeCount + FalsePositiveCount) ;
@@ -28,11 +27,5 @@ namespace diplom.Algorithms.TenCrossValidation
             return TruePositiveCount / (double)(TruePositiveCount + FalsePositiveCount);
         }
 
-        public void CalculatePercentNumbers() {
-            this.TruePositivePercent = this.TruePositiveCount / (double)this.DataSize;
-            this.TrueNegativePercent = this.TrueNegativeCount / (double)this.DataSize;
-            this.FalsePositivePercent = this.FalsePositiveCount / (double)this.DataSize;
-            this.FalseNegativePercent = this.FalseNegativeCount / (double)this.DataSize;
-        }
     }
 }
