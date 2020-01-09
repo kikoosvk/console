@@ -10,29 +10,29 @@ namespace console.Experiments
     public class Algorithm01Experiments
     {
 
-         private static string filePath = "./data/hepatitis/hcv_1_fuzzy.json";
+         private static string filePath = "./data/bupa/bupa_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "cirhoza");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
         }
 
         static void performAlg01(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg01: "+indexForParam);
-            int size = 11;
+            int size = 7;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
                 var beta = 0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 1; j++)
+                for (int j = 0; j < 150; j++)
                 {
                     Algorithm alg02;
                     switch (indexForParam)
                     {
                         case 0:
-                            alg02 = new Algorithm(beta, 0.6);
+                            alg02 = new Algorithm(beta, 0.5);
                             break;
                         case 1:
                         default:

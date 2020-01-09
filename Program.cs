@@ -23,7 +23,7 @@ namespace console
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
                 // using (StreamReader sr = new StreamReader("./data/abalone/3bins/abalone_fuzzy.json"))
-                using (StreamReader sr = new StreamReader("./data/haberman/haberman_fuzzy.json"))
+                using (StreamReader sr = new StreamReader("./data/bupa/bupa_fuzzy.json"))
 
                 {
                     String json = sr.ReadToEnd();
