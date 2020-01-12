@@ -10,7 +10,7 @@ namespace console.Experiments
     public class Algorithm01Experiments
     {
 
-         private static string filePath = "./data/bupa/bupa_fuzzy.json";
+         private static string filePath = "./data/bupa/bupa_fuzzy_drinks_0_6.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
@@ -20,19 +20,19 @@ namespace console.Experiments
         static void performAlg01(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg01: "+indexForParam);
-            int size = 7;
+            int size = 6;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0 + 0.1 * i;
+                var beta = 0.62 + 0.02 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 150; j++)
+                for (int j = 0; j < 100; j++)
                 {
                     Algorithm alg02;
                     switch (indexForParam)
                     {
                         case 0:
-                            alg02 = new Algorithm(beta, 0.5);
+                            alg02 = new Algorithm(beta, 0);
                             break;
                         case 1:
                         default:
@@ -42,7 +42,7 @@ namespace console.Experiments
 
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(3, table, alg02);
+                    var matrix02 = validation02.Validate02(10, table, alg02);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
@@ -56,10 +56,10 @@ namespace console.Experiments
 
         public static void run()
         {
-            Thread thread1 = new Thread(PerformAlg01param01);
-            thread1.Start();
-            // Thread thread2 = new Thread(PerformAlg01param02);
-            // thread2.Start();
+            // Thread thread1 = new Thread(PerformAlg01param01);
+            // thread1.Start();
+            Thread thread2 = new Thread(PerformAlg01param02);
+            thread2.Start();
         }
 
         static void PerformAlg01param01()
