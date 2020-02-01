@@ -16,7 +16,7 @@ namespace console
     {
         static void Main(string[] args)
         {
-            Algorithm01Experiments.run();
+            Algorithm03Experiments.run();
             return;
             var table = new FuzzyTable();
             try

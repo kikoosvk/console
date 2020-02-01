@@ -13,11 +13,11 @@ namespace console.Experiments
     {
         // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
 
-         private static string filePath = "./data/bupa/bupa_fuzzy.json";
+        private static string filePath = "./data/abalone/abalone_9.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "old", "young");
         }
         
         static void performAlg04(FuzzyTable table, int indexForParam)
@@ -27,27 +27,27 @@ namespace console.Experiments
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0 + 0.05 * i;
+                var beta = 0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
                     Algorithm04 alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm04(beta,  0.5, 1);
+                        alg02 = new Algorithm04(beta,  0.7, 1);
                         break; 
                         case 1:
-                        alg02 = new Algorithm04(0,beta, 1);
+                        alg02 = new Algorithm04(0.1,beta, 1);
                         break;
                         default:
-                        alg02 = new Algorithm04(0.2, 0.5, beta);
+                        alg02 = new Algorithm04(0.1, 0.7, beta);
                         break;
                     }
 
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(3, table, alg02);
+                    var matrix02 = validation02.Validate02(6, table, alg02);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
@@ -62,10 +62,10 @@ namespace console.Experiments
         {
             Thread thread1 = new Thread(PerformAlg04param01);
             thread1.Start();
-            // Thread thread2 = new Thread(PerformAlg04param02);
-            // thread2.Start();
-            // Thread thread3 = new Thread(PerformAlg04param03);
-            // thread3.Start();
+            Thread thread2 = new Thread(PerformAlg04param02);
+            thread2.Start();
+            Thread thread3 = new Thread(PerformAlg04param03);
+            thread3.Start();
 
         }
 

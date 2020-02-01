@@ -10,43 +10,43 @@ namespace console.Experiments
     public class Algorithm03Experiments
     {
      
-         private static string filePath = "./data/hepatitis/hcv_fuzzy_2v2_class.json";
+        private static string filePath = "./data/abalone/abalone_9.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "low", "hard");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "old", "young");
         }
         
          static void performAlg03(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg03: "+indexForParam);
-            int size = 7;
+            int size = 11;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.99 - 0.01 * i;
+                var beta = 0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 200; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     Algorithm03 alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm03(beta, 0.5, 1);
+                        alg02 = new Algorithm03(beta, 0.7, 0.9);
                         // alg02 = new Algorithm03(0.1, 0.4, 1);
                         break; 
                         case 1:
-                        alg02 = new Algorithm03(0, beta, 1);
+                        alg02 = new Algorithm03(0.1, beta, 0.9);
                         // alg02 = new Algorithm03(0.1, 0.5, 1);
                         break;
                         default:
-                        alg02 = new Algorithm03(0, 0.5, beta);
+                        alg02 = new Algorithm03(0.1, 0.7, beta);
                         // alg02 = new Algorithm03(0.1, 0.6, 1);
                         break;
                     }
                    
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(10, table, alg02);
+                    var matrix02 = validation02.Validate02(6, table, alg02);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
@@ -61,10 +61,10 @@ namespace console.Experiments
 
             public static void run()
             {
-                // Thread thread1 = new Thread(PerformAlg03param01);
-                // thread1.Start();
-                // Thread thread2 = new Thread(PerformAlg03param02);
-                // thread2.Start();
+                Thread thread1 = new Thread(PerformAlg03param01);
+                thread1.Start();
+                Thread thread2 = new Thread(PerformAlg03param02);
+                thread2.Start();
                 Thread thread3 = new Thread(PerformAlg03param03);
                 thread3.Start();
             }
