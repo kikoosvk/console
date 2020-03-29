@@ -13,11 +13,55 @@ namespace console.Experiments
     public class Algorithm02Experiments
     {
         // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-         private static string filePath = "./data/hepatitis/hcv_fuzzy_2v2_class.json";
+         private static string filePath = "./data/pima/diabetes_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "hard", "low");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1],  "no", "yes");
+        }
+
+        
+        static void performAlg02(FuzzyTable table, int indexForParam)
+        {
+            Console.WriteLine("performAlg02Exp: "+indexForParam);
+            int size = 9;
+            Double[] kriteriaArray = new Double[size];
+            var psi = new Dictionary<string, double>();
+            psi["no"] = 0.7;
+            psi["yes"] = 0.7;
+            for (int i = 0; i < size; i++)
+            {
+                var beta = 0.2 + 0.1 * i;
+                var dataSize = 0;
+                for (int j = 0; j < 40; j++)
+                {
+                    Algorithm02 alg02;
+                    switch(indexForParam){
+                        case 0:
+                        psi["no"] = beta;
+                        alg02 = new Algorithm02(0, psi);
+                        break;
+                        case 1:
+                        psi["yes"] = beta;
+                        alg02 = new Algorithm02(0, psi);
+                        break;
+                        default:
+                        alg02 = new Algorithm02(0, psi);
+                        break;
+                    }
+
+                    alg02.init(table);
+                    var validation02 = new TenCrossValidation();
+                    var matrix02 = validation02.Validate02(5, table, alg02);
+                    if (matrix02 != null)
+                    {
+                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
+                        kriteriaArray[i] += kriteria;
+                        dataSize++;
+                    }
+                }
+                Console.WriteLine(indexForParam + " CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
+            }
         }
         public static void run()
         {
@@ -141,48 +185,6 @@ namespace console.Experiments
             }
         }
 
-        static void performAlg02(FuzzyTable table, int indexForParam)
-        {
-            Console.WriteLine("performAlg02Exp: "+indexForParam);
-            int size = 11;
-            Double[] kriteriaArray = new Double[size];
-            var psi = new Dictionary<string, double>();
-            psi["yes"] = 0;
-            psi["no"] = 0;
-            for (int i = 0; i < size; i++)
-            {
-                var beta = 0.0 + 0.1 * i;
-                var dataSize = 0;
-                for (int j = 0; j < 10; j++)
-                {
-                    Algorithm02 alg02;
-                    switch(indexForParam){
-                        case 0:
-                        psi["yes"] = beta;
-                        alg02 = new Algorithm02(0.1, psi);
-                        break; 
-                        case 1:
-                        psi["no"] = beta;
-                        alg02 = new Algorithm02(0.1, psi);
-                        break;
-                        default:
-                        alg02 = new Algorithm02(0.1, psi);
-                        break;
-                    }
-
-                    alg02.init(table);
-                    var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(10, table, alg02);
-                    if (matrix02 != null)
-                    {
-                        var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
-                        kriteriaArray[i] += kriteria;
-                        dataSize++;
-                    }
-                }
-                Console.WriteLine(indexForParam + " CURRENT beta: " + (beta) + "  :" + kriteriaArray[i] / dataSize);
-            }
-        }
 
     }
 

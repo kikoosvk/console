@@ -111,6 +111,10 @@ namespace diplom.Algorithms.TenCrossValidation
                 if (!ExistsAtLeastOneRuleForEachClassAttribute(table, rules)) 
                 {
                     // Console.WriteLine("Rules are empty: " + rules.ToString());
+                    // foreach (var rule in rules)
+                    // {
+                    //     Console.WriteLine(rule.ToString());
+                    // }
                     return null;
                 }
                 // var classificator = new Classificator(rules, FuzzyTable);

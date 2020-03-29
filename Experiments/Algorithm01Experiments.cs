@@ -10,11 +10,11 @@ namespace console.Experiments
     public class Algorithm01Experiments
     {
 
-         private static string filePath = "./data/abalone/abalone_9.json";
+         private static string filePath = "./data/pima/diabetes_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "old", "young");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "no", "yes");
         }
 
         static void performAlg01(FuzzyTable table, int indexForParam)
@@ -26,7 +26,7 @@ namespace console.Experiments
             {
                 var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 20; j++)
                 {
                     Algorithm alg02;
                     switch (indexForParam)

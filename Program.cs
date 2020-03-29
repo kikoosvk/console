@@ -16,14 +16,14 @@ namespace console
     {
         static void Main(string[] args)
         {
-            Algorithm03Experiments.run();
+            Algorithm04Experiments.run();
             return;
             var table = new FuzzyTable();
             try
             {   // Open the text file using a stream reader.
                 // using (StreamReader sr = new StreamReader("test.txt"))
                 // using (StreamReader sr = new StreamReader("./data/abalone/3bins/abalone_fuzzy.json"))
-                using (StreamReader sr = new StreamReader("./data/bupa/bupa_fuzzy.json"))
+                using (StreamReader sr = new StreamReader("./data/bupa/bupa_fuzzy_drinks_0_6.json"))
 
                 {
                     String json = sr.ReadToEnd();
@@ -35,7 +35,7 @@ namespace console
                     {
                         table.addAttribute(array.attributes[i]);
                     }
-                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
+                    table.addClassAttribute(array.attributes[array.attributes.Count - 1], "no", "yes");
                     // table.addClassAttribute(array.attributes[array.attributes.Count - 1], "small", "big");
 
                     table.AddData(array.data);
@@ -48,32 +48,52 @@ namespace console
                     // var validator = new TenCrossValidation();
                     // validator.Validate02(10, table);
                     var psi = new Dictionary<string, double>();
-                    psi["no"] = 0.6;
-                    psi["yes"] = 0.8;
+                    psi["no"] = 0.7;
+                    psi["yes"] = 0.7;
                     // psi["old"] = 0.8;
 
                     Console.WriteLine("Algorithm01 started");
                     // //     // performAlg04(table, 2);
-                    var alg01 = new Algorithm(0.3, 0.7);
-                    alg01.init(table);
-                    var validation01 = new TenCrossValidation();
-                    var matrix01 = validation01.Validate02(10, table, alg01);
+
+                    int replications = 0; 
+                    double sens = 0;
+                    double spec = 0;
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        Console.WriteLine(i);
+                        var alg01 = new Algorithm(0, 0.6);
+                        alg01.init(table);
+                        var validation01 = new TenCrossValidation();
+                        var matrix01 = validation01.Validate02(2, table, alg01);
+                        if(matrix01 != null) {
+                            sens += matrix01.Sensitivity();
+                            spec += matrix01.Specificity();
+                            replications ++;
+                        }
+                    }
+
+                    Console.WriteLine("replications>: "+replications);
+                    Console.WriteLine("Sensitivity: "+sens/replications);
+                    Console.WriteLine("Specificity: "+spec/replications);
+                    Console.WriteLine("Kriteria: "+((sens/replications) + (spec/replications) ) / 2);
+
+                   
 
                     // var alg02 = new Algorithm02(0.1, psi);
                     // alg02.init(table);
                     // var validation02 = new TenCrossValidation();
-                    // var matrix02 = validation02.Validate02(3, table, alg02);
+                    // var matrix02 = validation02.Validate02(10, table, alg02);
 
-                    // var alg03 = new Algorithm03(0.1, 0.6, 0.88);
+                    // var alg03 = new Algorithm03(0.1, 0.7, 0.9);
 
                     // alg03.init(table);
                     // var validation03 = new TenCrossValidation();
-                    // var matrix03 = validation03.Validate02(3, table, alg03);
+                    // var matrix03 = validation03.Validate02(10, table, alg03);
 
                     // var alg04 = new Algorithm04(0.1, 0.7, 0.8);
                     // alg04.init(table);
                     // var validation04 = new TenCrossValidation();
-                    // var matrix04 = validation04.Validate02(3, table, alg04);
+                    // var matrix04 = validation04.Validate02(10, table, alg04);
 
                     // var kriteriaArray = 0.0;
                     // var dataSize = 0.0;
