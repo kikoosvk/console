@@ -27,5 +27,18 @@ namespace diplom.Algorithms.TenCrossValidation
             return TruePositiveCount / (double)(TruePositiveCount + FalsePositiveCount);
         }
 
+        public double Criteria() {
+            return ((TruePositiveCount / (double)(TruePositiveCount + FalseNegativeCount)) +
+             (TrueNegativeCount / (double)(TrueNegativeCount + FalsePositiveCount))) /2;
+        }
+
+        public void CalculatePercentNumbers() {
+            var dataSize = this.TruePositiveCount + this.FalsePositiveCount + this.TrueNegativeCount + this.FalseNegativeCount;
+            this.TruePositivePercent = this.TruePositiveCount / (double)dataSize;
+            this.TrueNegativePercent = this.TrueNegativeCount / (double)dataSize;
+            this.FalsePositivePercent = this.FalsePositiveCount / (double)dataSize;
+            this.FalseNegativePercent = this.FalseNegativeCount / (double)dataSize;
+        }
+
     }
 }

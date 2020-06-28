@@ -1,53 +1,49 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
-using console.Algorithms.src.algorithm01;
 using console.src.algorithm01;
 using diplom.Algorithms.TenCrossValidation;
 using Newtonsoft.Json;
 
 namespace console.Experiments
 {
-    public class Algorithm04Experiments
+    public class Algorithm01ModifExperiments
     {
-        // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-
-        private static string filePath = "./data/pima/diabetes_fuzzy.json";
+        private static string filePath = "./data/bupa_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "no", "yes");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
         }
         
-        static void performAlg04(FuzzyTable table, int indexForParam)
+        static void performAlg01Modif(FuzzyTable table, int indexForParam)
         {
-            Console.WriteLine("performAlg04Exp: "+indexForParam);
-            int size = 16;
+            Console.WriteLine("performAlg01ModifExp: "+indexForParam);
+            int size = 4;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.86 + 0.02 * i;
+                var beta = 0.6 + 0.05 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < 100; j++)
                 {
                     // Algorithm04 alg02 = new Algorithm04(beta,  0.7, 0.9);
-                    Algorithm04 alg02;
+                    Algorithm01Modification alg02;
                     switch(indexForParam){
                         case 0:
-                        alg02 = new Algorithm04(beta,  0.7, 0.97);
+                        alg02 = new Algorithm01Modification(beta,  0.7, 0.97);
                         break; 
                         case 1:
-                        alg02 = new Algorithm04(0,beta, 0.9);
+                        alg02 = new Algorithm01Modification(0,beta, 0.2);
                         break;
                         default:
-                        alg02 = new Algorithm04(0, 0.68, beta);
+                        alg02 = new Algorithm01Modification(0, 0.62, beta);
                         break;
                     }
 
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(3, table, alg02);
+                    var matrix02 = validation02.Validate(10, table, alg02);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
@@ -60,16 +56,16 @@ namespace console.Experiments
         }
         public static void run()
         {
-            // Thread thread1 = new Thread(PerformAlg04param01);
+            // Thread thread1 = new Thread(PerformAlg01Modifparam01);
             // thread1.Start();
-            // Thread thread2 = new Thread(PerformAlg04param02);
+            // Thread thread2 = new Thread(PerformAlg01Modifparam02);
             // thread2.Start();
-            Thread thread3 = new Thread(PerformAlg04param03);
+            Thread thread3 = new Thread(PerformAlg01Modifparam03);
             thread3.Start();
 
         }
 
-        static void PerformAlg04param01()
+        static void PerformAlg01Modifparam01()
         {
             var table = new FuzzyTable();
             try
@@ -96,7 +92,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 0);
+                    performAlg01Modif(table, 0);
                 }
             }
             catch (Exception e)
@@ -107,7 +103,7 @@ namespace console.Experiments
             }
         }
 
-        static void PerformAlg04param02()
+        static void PerformAlg01Modifparam02()
         {
             var table = new FuzzyTable();
             try
@@ -133,7 +129,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 1);
+                    performAlg01Modif(table, 1);
                 }
             }
             catch (Exception e)
@@ -144,7 +140,7 @@ namespace console.Experiments
             }
         }
 
-        static void PerformAlg04param03()
+        static void PerformAlg01Modifparam03()
         {
             var table = new FuzzyTable();
             try
@@ -170,7 +166,7 @@ namespace console.Experiments
                         p[i] = i;
                     }
 
-                    performAlg04(table, 2);
+                    performAlg01Modif(table, 2);
                 }
             }
             catch (Exception e)

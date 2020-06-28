@@ -10,39 +10,39 @@ namespace console.Experiments
     public class Algorithm01Experiments
     {
 
-         private static string filePath = "./data/pima/diabetes_fuzzy.json";
+        private static string filePath = "./data/bupa_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "no", "yes");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
         }
 
         static void performAlg01(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg01: "+indexForParam);
-            int size = 10;
+            int size = 11;
             Double[] kriteriaArray = new Double[size];
             for (int i = 0; i < size; i++)
             {
                 var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 200; j++)
                 {
-                    Algorithm alg02;
+                    Algorithm01 alg01;
                     switch (indexForParam)
                     {
                         case 0:
-                            alg02 = new Algorithm(beta, 0.7);
+                            alg01 = new Algorithm01(beta, 0.7);
                             break;
                         case 1:
                         default:
-                            alg02 = new Algorithm(0, beta);
+                            alg01 = new Algorithm01(0, beta);
                             break;
                     }
 
-                    alg02.init(table);
+                    alg01.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(5, table, alg02);
+                    var matrix02 = validation02.Validate(10, table, alg01);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;
@@ -56,8 +56,8 @@ namespace console.Experiments
 
         public static void run()
         {
-            Thread thread1 = new Thread(PerformAlg01param01);
-            thread1.Start();
+            // Thread thread1 = new Thread(PerformAlg01param01);
+            // thread1.Start();
             Thread thread2 = new Thread(PerformAlg01param02);
             thread2.Start();
         }
@@ -117,13 +117,7 @@ namespace console.Experiments
                         table.addAttribute(array.attributes[i]);
                     }
                     addClass(table, array);
-
                     table.AddData(array.data);
-                    var p = new int[20];
-                    for (int i = 0; i < p.Length; i++)
-                    {
-                        p[i] = i;
-                    }
 
                     performAlg01(table, 1);
                 }

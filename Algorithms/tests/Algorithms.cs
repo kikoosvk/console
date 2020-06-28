@@ -11,13 +11,13 @@ namespace console.Algorithms.tests
 {
     public class Algorithms
     {
-        private Algorithm alg01;
+        private Algorithm01 alg01;
         private Algorithm02 alg02;
         private readonly ITestOutputHelper output;
 
         public Algorithms(ITestOutputHelper output)
         {
-            alg01 = new Algorithm(0.1, 0.8);
+            alg01 = new Algorithm01(0.1, 0.8);
 
             var psi = new Dictionary<string, double>();
             psi["c1"] = 0.8;
@@ -62,7 +62,7 @@ namespace console.Algorithms.tests
                     var currentRulesString = "";
                     for (int i = 0; i < rules.Count; i++)
                     {
-                        currentRulesString += rules[i].ToString() + ";";
+                        currentRulesString += rules[i].ToStringOnlyTerm() + ";";
                     }
                     Assert.Equal(rulesString, currentRulesString);
                 }
@@ -110,7 +110,7 @@ namespace console.Algorithms.tests
                     var currentRulesString = "";
                     for (int i = 0; i < rules.Count; i++)
                     {
-                        currentRulesString += rules[i].ToString() + ";";
+                        currentRulesString += rules[i].ToStringOnlyTerm() + ";";
                     }
                     Assert.Equal(rulesString, currentRulesString);
                 }

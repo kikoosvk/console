@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using diplom.Algorithms;
+using console.Algorithms.src;
 
 namespace console.src.algorithm01
 {
-    public class Algorithm: IProcessable
+    public class Algorithm01: IProcessable
     {
         protected FuzzyTable table;
         protected double alfa;
         protected double psi; 
         protected int t;
         protected List<Rule> rules;
-        protected List<List<string>> Q;
+        public List<List<string>> Q;
         protected List<List<string>> Q1;
         protected List<List<string>> Q2;
         protected List<List<string>> L;
-        protected List<List<string>> Lzredukovana;
-        protected int maxDlzka;
-        protected List<int> aktualnaDlzka;
-        protected List<bool> ponechanaPremenna;
+        protected List<List<string>> Lreduced;
+        protected int maxLength;
+        protected List<int> currentLength;
+        protected List<bool> isVariableNotRemoved;
         protected FuzzyAttribute C;
         protected List<int> P;
         protected List<List<int>> I;
@@ -29,12 +30,14 @@ namespace console.src.algorithm01
         protected List<List<int>> Z;
         protected List<Rule> R;
 
-        public Algorithm(double alfa)
+        protected Stack<StepData> stepsStack;
+
+        public Algorithm01(double alfa)
         {
             this.alfa = alfa;
         }
 
-        public Algorithm(double alfa, double psi)
+        public Algorithm01(double alfa, double psi)
         {
             this.alfa = alfa;
             this.psi = psi;
@@ -50,11 +53,11 @@ namespace console.src.algorithm01
             this.Q1 = new List<List<string>>();
             this.Q2 = new List<List<string>>();
             this.L = new List<List<string>>(this.Q);;
-            this.maxDlzka = this.Q[this.t].Count - 1;
-            this.aktualnaDlzka = new List<int>();
-            this.aktualnaDlzka.Add(1);
-            this.ponechanaPremenna = new List<bool>();
-            this.ponechanaPremenna.Add(false);
+            this.maxLength = this.Q[this.t].Count - 1;
+            this.currentLength = new List<int>();
+            this.currentLength.Add(1);
+            this.isVariableNotRemoved = new List<bool>();
+            this.isVariableNotRemoved.Add(false);
             this.C = this.table.getClassAttribute();
             this.P = new List<int>(this.table.GetTable().Rows.Count);
             for (int i = 0; i < this.table.GetTable().Rows.Count; i++)
@@ -67,16 +70,23 @@ namespace console.src.algorithm01
             this.Z.Add(P);
             this.I1 = new List<List<int>>();
             this.I2 = new List<List<int>>();
-            this.Lzredukovana = new List<List<string>>();
+            this.Lreduced = new List<List<string>>();
             this.R = new List<Rule>();
+            this.stepsStack = new Stack<StepData>();
         }
 
         public List<Rule> process() {
-            vykonajK2azK5(this.I[t], this.Q[t], this.L[t], this.aktualnaDlzka[t], this.ponechanaPremenna[t],this.t);
+            this.stepsStack.Push(new StepData(this.I[t], this.Q[t], this.L[t], this.currentLength[t], this.isVariableNotRemoved[t],this.t, null));
+            while(this.stepsStack.Count > 0)
+            {
+                var data = this.stepsStack.Pop();
+                doStepsFromK2toK5(data.I, data.Q, data.L, data.aktualnaDlzka, data.ponechanaPremena, data.t);
+            }
+
             foreach (var item in this.R)
             {
-                var svietnik = calculateSvietnik(item.Items, item.C.Id, this.P);
-                if (svietnik >= this.psi)
+                var truthRate = calculateTruthRate(item.Items, item.C.Id, this.P);
+                if (truthRate >= this.psi)
                 {
                     // print(item);
                     this.rules.Add(item);
@@ -96,7 +106,7 @@ namespace console.src.algorithm01
             Console.WriteLine(item.C.Label);
         }
 
-        protected void vykonajK2azK5(List<int> I, List<string> Q, List<string> L, int aktDlzka, bool ponechana, int t)
+        protected void doStepsFromK2toK5(List<int> I, List<string> Q, List<string> L, int currentLength, bool isVariableNotRemoved, int t)
         {
             // if(this.I.Count <= t) this.I.Add(new List<int>(I)); else this.I[t] = new List<int>(I);
             // if(this.Q.Count <= t) this.Q.Add(new List<string>(Q)); else this.Q[t] = new List<string>(Q);
@@ -106,19 +116,18 @@ namespace console.src.algorithm01
             set(this.I, I, t);
             set(this.Q, Q, t);
             set(this.L, L, t);
-            set(this.aktualnaDlzka, aktDlzka, t);
-            set(this.ponechanaPremenna, ponechana, t);
+            set(this.currentLength, currentLength, t); 
+            set(this.isVariableNotRemoved, isVariableNotRemoved, t);
             this.t = t;
 
             // K2
             processK2();
             // K3
             processK3();
-            if(aktualnaDlzka[this.t] >= maxDlzka)
+            if(this.currentLength[this.t] >= maxLength)
             {
                 // K4
                 processK4();
-                // TODO sformuj pravidla AK POTOM WOOSH
             } else
             {
                 // K5
@@ -128,64 +137,53 @@ namespace console.src.algorithm01
 
         private void processK2()
         {
-            string odstranovana = null;
-            double maxHodnota = -1;
+            string labelToBeRemoved = null;
+            double maxNValue = -1;
             foreach (var labelAk in this.L[this.t])
             {  
-                var hodnotaN = this.calculateN(labelAk,this.I[this.t]);
-                if(maxHodnota < hodnotaN)
+                var NvalueForLabel = this.calculateN(labelAk,this.I[this.t]);
+                if(maxNValue < NvalueForLabel)
                 {
-                    odstranovana = labelAk;
-                    maxHodnota = hodnotaN;
+                    labelToBeRemoved = labelAk;
+                    maxNValue = NvalueForLabel;
                 }
             }     
-
-            // this.I1[this.t] = new List<int>();
-            // this.I2[this.t] = new List<int>();
-            // this.Q1[this.t] = new List<string>(this.Q[this.t]);
-            // this.Q1[this.t].Remove(odstranovana);
-            // this.Q2[this.t] = new List<string>(this.Q[this.t]);
 
             this.set(this.I1, new List<int>(), this.t);
             this.set(this.I2, new List<int>(), this.t);
             
             this.set(this.Q1, new List<string>(this.Q[this.t]), this.t);
-            this.Q1[this.t].Remove(odstranovana);
+            this.Q1[this.t].Remove(labelToBeRemoved);
             this.set(this.Q2, new List<string>(this.Q[this.t]), this.t);
 
-            var Lzreduk = new List<string>(this.L[this.t]);
-            Lzreduk.Remove(odstranovana);
-            // this.Lzredukovana.Add(Lzreduk);
-            this.set(this.Lzredukovana, Lzreduk, this.t);
+            var reducedL = new List<string>(this.L[this.t]);
+            reducedL.Remove(labelToBeRemoved);
 
-            if(ponechanaPremenna[this.t]) 
+            this.set(this.Lreduced, reducedL, this.t);
+
+            if(isVariableNotRemoved[this.t]) 
             {
-                // this.Z[this.t] = this.I[this.t];
                 this.set(this.Z, this.I[this.t],this.t);
             } else{
-                // this.Z[this.t] = this.P;
                 this.set(this.Z, this.P,this.t);
             }
         }
         protected virtual void processK3()
         {
-            foreach (var pacient in this.I[t])
+            foreach (var patient in this.I[t])
             {
-                if (existujeQcko(pacient)) {
-                    this.I2[this.t].Add(pacient);
+                if (doesQexists(patient)) {
+                    this.I2[this.t].Add(patient);
                 } else {
-                    this.I1[this.t].Add(pacient);
+                    this.I1[this.t].Add(patient);
                 }
             }
         }
 
-        private void processK4()
+        public void processK4()
         {
-            if(aktualnaDlzka[t] >= maxDlzka)
+            if(currentLength[t] >= maxLength)
             {
-                // TODO sformuj pravidla AK POTOM WOOSH
-                // Console.WriteLine("DONE");
-                // Console.WriteLine("Q1 size: "+ this.Q1[this.t].Count);
                 foreach (var p in this.I1[this.t])
                 {
                     var rule = new Rule();
@@ -204,7 +202,7 @@ namespace console.src.algorithm01
                         this.R.Add(rule);
                     }
                 }
-                // Console.WriteLine("Q2 size: "+ this.Q2[this.t].Count);
+
                 foreach (var p in this.I2[this.t])
                 {
                     var rule = new Rule();
@@ -226,24 +224,27 @@ namespace console.src.algorithm01
             }
         }
 
-        private void processK5()
+        public void processK5()
         {
             var i1 = new List<int>(this.I1[this.t]);
             var i2 = new List<int>(this.I2[this.t]);
             var q1 = new List<string>(this.Q1[this.t]);
             var q2 = new List<string>(this.Q2[this.t]);
-            var Lzreduk = new List<string>(this.Lzredukovana[this.t]);
+            var Lzreduk = new List<string>(this.Lreduced[this.t]);
             var L = this.L[this.t];
-            var aktDlzka = this.aktualnaDlzka[this.t] + 1;
+            var aktDlzka = this.currentLength[this.t] + 1;
             var t = this.t + 1;
-            if(i1.Count > 0 && q1.Count > 0 && aktDlzka - 1 < maxDlzka)
-                this.vykonajK2azK5(i1, q1, Lzreduk, aktDlzka, true, t );
-            if(i2.Count > 0 && q2.Count > 0 && aktDlzka - 1 < maxDlzka)
-                this.vykonajK2azK5(i2, q2, Lzreduk, aktDlzka, false, t);
+
+            if(i2.Count > 0 && q2.Count > 0 && aktDlzka - 1 < maxLength)
+                this.stepsStack.Push(new StepData(i2, q2, Lzreduk, aktDlzka, false,t, null));
+
+            if(i1.Count > 0 && q1.Count > 0 && aktDlzka - 1 < maxLength)
+                this.stepsStack.Push(new StepData(i1, q1, Lzreduk, aktDlzka, true,t, null));
+           
              
         }
 
-        public bool existujeQcko(int patient) 
+        public bool doesQexists(int patient) 
         {
             var patientRow = this.table.GetTable().Rows[patient];
             foreach (var q in this.Z[t])
@@ -330,7 +331,7 @@ namespace console.src.algorithm01
             var sortedPIList = calculatePIList(subB, rows);
             for (int i = 2; i <= this.table.getClassAttribute().Labels.Length; i++)
             {
-                // PI[i] - PI[i+1] * ln i
+                // (PI[i] - PI[i+1]) * ln i
                 value += (sortedPIList[i - 1] - sortedPIList[i]) * Math.Log(i);
             }
             return value;
@@ -342,7 +343,7 @@ namespace console.src.algorithm01
             var PIList = new double[labels.Length];
             for (int i = 0; i < labels.Length; i++)
             {
-                PIList[i] = calculateSvietnik(G,labels[i],rows);
+                PIList[i] = calculateTruthRate(G,labels[i],rows);
             }
             Array.Sort(PIList);
             Array.Reverse(PIList);
@@ -353,7 +354,7 @@ namespace console.src.algorithm01
             }
             Array.Resize(ref  PIList, PIList.Length+1);
             PIList[PIList.Length - 1] =  0;
-            // vraciam svietnik / max svietnik
+
             for (int i = 0; i < PIList.Length; i++)
             {
                 if(Double.IsNaN(PIList[i]))
@@ -364,7 +365,7 @@ namespace console.src.algorithm01
             return PIList;
         }
 
-        public double calculateSvietnik(FuzzyAttributeLabel G, FuzzyAttributeLabel subC, List<int> rows) {
+        public double calculateTruthRate(FuzzyAttributeLabel G, FuzzyAttributeLabel subC, List<int> rows) {
             double top = 0;
             double bottom = 0;
             foreach (int index in rows)
@@ -377,7 +378,7 @@ namespace console.src.algorithm01
             return top / bottom;
         }
 
-        public double calculateSvietnik(List<Item> G, string subCIndex, List<int> rows) {
+        public double calculateTruthRate(List<Item> G, string subCIndex, List<int> rows) {
             double top = 0;
             double bottom = 0;
             var listOfG = new List<double>();
@@ -427,19 +428,19 @@ namespace console.src.algorithm01
             return value;
         }
 
-        private void set(List<List<int>> array, List<int> value, int t)
+        public void set(List<List<int>> array, List<int> value, int t)
         {
             if(array.Count <= t) array.Add(new List<int>(value)); else array[t] = new List<int>(value);
         }
-        private void set(List<List<string>> array, List<string> value, int t)
+        public void set(List<List<string>> array, List<string> value, int t)
         {
             if(array.Count <= t) array.Add(new List<string>(value)); else array[t] = new List<string>(value);
         }
-        private void set(List<int> array, int value, int t)
+        public void set(List<int> array, int value, int t)
         {
             if(array.Count <= t) array.Add(value); else array[t] = value;
         }
-        private void set(List<bool> array, bool value, int t)
+        public void set(List<bool> array, bool value, int t)
         {
             if(array.Count <= t) array.Add(value); else array[t] = value;
         }

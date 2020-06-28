@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
-using console.Algorithms.src.algorithm01;
 using console.src.algorithm01;
 using diplom.Algorithms.TenCrossValidation;
 using Newtonsoft.Json;
@@ -12,26 +10,25 @@ namespace console.Experiments
 {
     public class Algorithm02Experiments
     {
-        // private static string filePath = "./data/iris/2class/male_rozoskupenie/data.json";
-         private static string filePath = "./data/pima/diabetes_fuzzy.json";
+        private static string filePath = "./data/bupa_fuzzy.json";
 
         private static void addClass(FuzzyTable table, dynamic array)
         {
-            table.addClassAttribute(array.attributes[array.attributes.Count - 1],  "no", "yes");
+            table.addClassAttribute(array.attributes[array.attributes.Count - 1], "yes", "no");
         }
 
         
         static void performAlg02(FuzzyTable table, int indexForParam)
         {
             Console.WriteLine("performAlg02Exp: "+indexForParam);
-            int size = 9;
+            int size = 11;
             Double[] kriteriaArray = new Double[size];
             var psi = new Dictionary<string, double>();
             psi["no"] = 0.7;
             psi["yes"] = 0.7;
             for (int i = 0; i < size; i++)
             {
-                var beta = 0.2 + 0.1 * i;
+                var beta = 0.0 + 0.1 * i;
                 var dataSize = 0;
                 for (int j = 0; j < 40; j++)
                 {
@@ -52,7 +49,7 @@ namespace console.Experiments
 
                     alg02.init(table);
                     var validation02 = new TenCrossValidation();
-                    var matrix02 = validation02.Validate02(5, table, alg02);
+                    var matrix02 = validation02.Validate(10, table, alg02);
                     if (matrix02 != null)
                     {
                         var kriteria = (matrix02.Sensitivity() + matrix02.Specificity()) / 2;

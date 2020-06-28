@@ -46,6 +46,21 @@ namespace console.src
 
         public override string ToString()
         {
+            string s = "IF ";
+            foreach (var r in this.Items)
+            {       
+                s += r.Name+" IS "+r.Label+" AND ";
+            }
+
+            s = s.Substring(0, s.Length - 4);
+
+            s += "THEN " + this.C.Name + " IS " + this.C.Label;
+            return s;
+        }
+
+        
+        public string ToStringOnlyTerm()
+        {
             string s = "";
             foreach (var r in this.Items)
             {       

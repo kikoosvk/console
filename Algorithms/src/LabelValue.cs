@@ -41,16 +41,6 @@ namespace console.src
             set {this._indexValue = value;}
         }
 
-            // public int Compare(LabelValue x, LabelValue y)
-            // {
-            //     if(x.Value > y.Value) {
-            //         return 1;
-            //     } else if (x.Value < y.Value) {
-            //         return -1;
-            //     }
-            //     return 0;
-            // }
-
         public int CompareTo(LabelValue y)
         {
              if(this.Value > y.Value) {
